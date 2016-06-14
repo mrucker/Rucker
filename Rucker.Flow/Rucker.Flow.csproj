@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7FD3DFB5-23EB-40A5-B9C8-5EE58E4EF0A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rucker.Flow</RootNamespace>
+    <AssemblyName>Rucker.Flow</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Jobs\Settings\ISetting.cs" />
+    <Compile Include="Jobs\Settings\Setting.cs" />
+    <Compile Include="Jobs\Settings\SettingSection.cs" />
+    <Compile Include="Pipes\ILastPipe.cs" />
+    <Compile Include="Pipes\IMidPipe.cs" />
+    <Compile Include="Pipes\IPipe.cs" />
+    <Compile Include="Pipes\IFirstPipe.cs" />
+    <Compile Include="Pipes\PipesPipe.cs" />
+    <Compile Include="Pipes\PipeStatus.cs" />
+    <Compile Include="Jobs\Job.cs" />
+    <Compile Include="Jobs\JobsJob.cs" />
+    <Compile Include="Jobs\ActionJob.cs" />
+    <Compile Include="Jobs\EtlJob.cs" />
+    <Compile Include="Jobs\SqlJob.cs" />
+    <Compile Include="_Tests\Classes\Jobs\DelayedEtlJob.cs" />
+    <Compile Include="_Tests\Classes\Jobs\FailedEtlJob.cs" />
+    <Compile Include="_Tests\Classes\Jobs\InitializingFailJob.cs" />
+    <Compile Include="_Tests\Classes\Jobs\ProcessingFailJob.cs" />
+    <Compile Include="_Tests\Classes\Writers\WriteFailed.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingProgressReport.cs" />
+    <Compile Include="_Tests\Jobs\JobTests.cs" />
+    <Compile Include="_Tests\Jobs\JobsJobTests.cs" />
+    <Compile Include="_Tests\Jobs\ActionJobTests.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingStateReporter.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingErrorReporter.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
+    <Compile Include="_Tests\Jobs\EtlJobTests.cs" />
+    <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />
+    <Compile Include="Reporters\IStateReporter.cs" />
+    <Compile Include="Reporters\IErrorReporter.cs" />
+    <Compile Include="Trackers\Tracker.cs" />
+    <Compile Include="_Tests\Classes\Readers\ReadDelay.cs" />
+    <Compile Include="_Tests\Classes\Readers\ReadMemory.cs" />
+    <Compile Include="_Tests\Classes\Writers\WriteDelay.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rucker.Core\Rucker.Core.csproj">
+      <Project>{c56449b9-a9b0-495f-8c7b-8ee6ad419fba}</Project>
+      <Name>Rucker.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Rucker.Data\Rucker.Data.csproj">
+      <Project>{d98306a1-773b-408f-981f-5ec2974e14e1}</Project>
+      <Name>Rucker.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
