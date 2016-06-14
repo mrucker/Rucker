@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     public class TestingProgressReporter: IStateReporter
     {

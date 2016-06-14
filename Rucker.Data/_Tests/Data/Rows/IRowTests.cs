@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using Rucker.Data;
 using Rucker.Extensions;
 using NUnit.Framework;
-using Rucker.Data;
+
 
 namespace Rucker.Tests
 {

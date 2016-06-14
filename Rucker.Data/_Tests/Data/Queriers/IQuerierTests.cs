@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Rucker.Extensions;
-using NUnit.Framework;
 using Rucker.Data;
 using Rucker.Testing;
+using Rucker.Extensions;
+using NUnit.Framework;
 
 namespace Rucker.Tests
 {    

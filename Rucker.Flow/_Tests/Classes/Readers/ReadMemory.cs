@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Rucker.Data;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     class ReadMemory: IRead<IRows>
     {

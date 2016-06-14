@@ -1,6 +1,7 @@
 ﻿using System;
-using NUnit.Framework;
 using Rucker.Data;
+using NUnit.Framework;
+
 
 namespace Rucker.Tests
 {

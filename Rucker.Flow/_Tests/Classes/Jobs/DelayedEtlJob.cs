@@ -1,7 +1,6 @@
 ﻿using Rucker.Data;
-using Rucker.Flow;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     public class DelayedEtlJob : EtlJob<IRows, IRows>
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     public class TestingErrorReporter: IErrorReporter
     {

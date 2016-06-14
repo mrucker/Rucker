@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework;
 using Rucker.Data;
 using Rucker.Testing;
+using NUnit.Framework;
 
 namespace Rucker.Tests
 {

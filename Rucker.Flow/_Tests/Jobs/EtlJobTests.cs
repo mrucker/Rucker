@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using Rucker.Flow.Tests.Classes;
 using Rucker.Testing;
 
-namespace Rucker.Flow.Tests.Jobs
+
+namespace Rucker.Flow.Tests
 {
     public class EtlJobTests
     {

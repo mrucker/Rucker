@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Rucker.Flow;
 using NUnit.Framework;
-using Rucker.Flow.Tests.Classes;
 
-namespace Rucker.Flow.Tests.Jobs
+namespace Rucker.Flow.Tests
 {
     public class ActionJobTests
     {

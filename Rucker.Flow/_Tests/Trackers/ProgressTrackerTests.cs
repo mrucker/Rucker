@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using Rucker.Flow.Tests.Classes;
 
-namespace Rucker.Flow.Tests.Trackers
+namespace Rucker.Flow.Tests
 {
     public class ProgressTrackerTests
     {

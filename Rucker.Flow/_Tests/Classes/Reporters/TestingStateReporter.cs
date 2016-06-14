@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     public class TestingStateReporter: IStateReporter
     {

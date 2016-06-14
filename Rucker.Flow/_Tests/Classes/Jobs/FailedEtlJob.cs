@@ -1,8 +1,6 @@
-﻿using System;
-using Rucker.Data;
-using Rucker.Flow;
+﻿using Rucker.Data;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     public class FailedEtlJob : EtlJob<IRows, IRows>
     {

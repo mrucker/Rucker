@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Rucker.Data;
 
-namespace Rucker.Flow.Tests.Classes
+namespace Rucker.Flow.Tests
 {
     public class WriteDelay: IWrite<IRows>
     {

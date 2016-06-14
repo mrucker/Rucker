@@ -1,4 +1,4 @@
-﻿namespace Rucker.Flow.Tests.Classes
+﻿namespace Rucker.Flow.Tests
 {
     public class TestingProgressReport
     {
