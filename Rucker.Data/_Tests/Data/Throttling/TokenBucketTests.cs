@@ -2,7 +2,6 @@
 using Rucker.Data;
 using NUnit.Framework;
 
-
 namespace Rucker.Tests
 {
     [TestFixture]

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Rucker.Convert;
-using NUnit.Framework;
 using Rucker.Data;
 using Rucker.Testing;
+using Rucker.Convert;
+using NUnit.Framework;
 
 // ReSharper disable AccessToDisposedClosure
 namespace Rucker.Tests
