@@ -5,7 +5,7 @@ using Rucker.Extensions;
 
 namespace Rucker.Flow
 {            
-    public sealed class FirstLastCoupling<P, C> : Coupling where P : class, C
+    internal sealed class FirstLastCoupling<P, C> : Coupling, IDonePipe where P : class, C
     {
         #region Fields
         private readonly IFirstPipe<P> _first;
@@ -35,7 +35,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    public sealed class FirstMidCoupling<P1, C1, P2> : Coupling, IFirstPipe<P2> where P1 : class, C1
+    internal sealed class FirstMidCoupling<P1, C1, P2> : Coupling, IFirstPipe<P2> where P1 : class, C1
     {
         #region Fields
         private readonly IFirstPipe<P1> _first;
@@ -64,7 +64,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    public sealed class MidMidCoupling<C1, P1, C2, P2> : Coupling, IMidPipe<C1, P2> where P1 : class, C2
+    internal sealed class MidMidCoupling<C1, P1, C2, P2> : Coupling, IMidPipe<C1, P2> where P1 : class, C2
     {
         #region Fields
         private readonly IMidPipe<C1, P1> _mid1;
@@ -88,7 +88,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    public sealed class MidLastCoupling<C1, P1, C2>: Coupling, ILastPipe<C1> where P1 : class, C2
+    internal sealed class MidLastCoupling<C1, P1, C2>: Coupling, ILastPipe<C1> where P1 : class, C2
     {
         #region Fields
         private readonly IMidPipe<C1, P1> _mid;

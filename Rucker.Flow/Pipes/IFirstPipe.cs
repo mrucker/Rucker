@@ -16,7 +16,7 @@ namespace Rucker.Flow
             return new FirstMidCoupling<P1, C1, P2>(first, mid);
         }
 
-        public static FirstLastCoupling<P1, C1> Then<P1, C1>(this IFirstPipe<P1> first, ILastPipe<C1> last) where P1: class, C1
+        public static IDonePipe Then<P1, C1>(this IFirstPipe<P1> first, ILastPipe<C1> last) where P1: class, C1
         {
             return new FirstLastCoupling<P1, C1>(first, last);
         }
