@@ -51,11 +51,12 @@
     <Compile Include="Jobs\Settings\ISetting.cs" />
     <Compile Include="Jobs\Settings\Setting.cs" />
     <Compile Include="Jobs\Settings\SettingSection.cs" />
+    <Compile Include="Pipes\AsyncPipe.cs" />
     <Compile Include="Pipes\ILastPipe.cs" />
     <Compile Include="Pipes\IMidPipe.cs" />
     <Compile Include="Pipes\IPipe.cs" />
     <Compile Include="Pipes\IFirstPipe.cs" />
-    <Compile Include="Pipes\PipesPipe.cs" />
+    <Compile Include="Pipes\Coupling.cs" />
     <Compile Include="Pipes\PipeStatus.cs" />
     <Compile Include="Jobs\Job.cs" />
     <Compile Include="Jobs\JobsJob.cs" />
