@@ -17,7 +17,7 @@ namespace Rucker.Flow
 
         public static IMidPipe<P, P> Thread<P>(this IMidPipe<P, P> mid, int maxDegreeOfParallelism) where P : class
         {
-            return new ConcatMidMidPipe<P, P, P, P>(mid, new ThreadMidPipe<P>(maxDegreeOfParallelism));
+            return new ConcatMidMidPipe<P, P, P, P>(mid, new ThreadedMidPipe<P>(maxDegreeOfParallelism));
         }
 
         public static ILastPipe<C1> Then<C1, P1, C2>(this IMidPipe<C1, P1> mid, ILastPipe<C2> last) where P1 : class, C2

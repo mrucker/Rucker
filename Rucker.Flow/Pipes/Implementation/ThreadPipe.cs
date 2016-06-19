@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 namespace Rucker.Flow
 {    
-    internal sealed class ThreadMidPipe<T>: IMidPipe<T, T>
+    internal sealed class ThreadedMidPipe<T>: IMidPipe<T, T>
     {
         #region Fields
         private readonly int _maxDegreeOfParallelism;
@@ -13,11 +14,10 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructor
-        public ThreadMidPipe(int maxDegreeOfParallelism)
+        public ThreadedMidPipe(int maxDegreeOfParallelism)
         {
             _maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
-
         #endregion
 
         #region Properties
@@ -61,6 +61,64 @@ namespace Rucker.Flow
             Status = PipeStatus.Finished;
 
             return _blockingCollection;
+        }
+        #endregion
+    }
+
+    internal sealed class ThreadedDonePipe : IDonePipe
+    {
+        #region Fields
+        private readonly IDonePipe _done;
+        private readonly int _maxDegreeOfParallelism;
+        #endregion
+
+        #region Constructor
+        public ThreadedDonePipe(IDonePipe done, int maxDegreeOfParallelism)
+        {
+            _done = done;
+            _maxDegreeOfParallelism = maxDegreeOfParallelism;
+        }
+
+        #endregion
+
+        #region Properties
+        public PipeStatus Status { get; private set; }
+        #endregion
+
+        #region Public Methods
+        public void Start()
+        {
+            if (Status != PipeStatus.Working)
+            {
+                lock (this)
+                {
+                    if (Status == PipeStatus.Working)
+                    {
+                        return;
+                    }
+
+                    Status = PipeStatus.Working;
+                }
+            }
+
+            var actions = Enumerable.Repeat<Action>(_done.Start, _maxDegreeOfParallelism).ToArray();
+
+            try
+            {
+                Parallel.Invoke(new ParallelOptions { MaxDegreeOfParallelism = _maxDegreeOfParallelism }, actions);
+            }
+            catch (Exception)
+            {
+                Status = PipeStatus.Errored;
+                throw;
+            }
+
+            Status = PipeStatus.Finished;
+        }
+
+        public void Stop()
+        {
+            _done.Stop();
         }
         #endregion
     }

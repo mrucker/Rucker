@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Rucker.Extensions;
 
 namespace Rucker.Flow
-{            
+{
     internal sealed class ConcatFirstLastPipe<P, C> : ConcatPipe, IDonePipe where P : class, C
     {
         #region Fields

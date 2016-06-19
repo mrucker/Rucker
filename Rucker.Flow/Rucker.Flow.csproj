@@ -51,7 +51,7 @@
     <Compile Include="Jobs\Settings\ISetting.cs" />
     <Compile Include="Jobs\Settings\Setting.cs" />
     <Compile Include="Jobs\Settings\SettingSection.cs" />
-    <Compile Include="Pipes\Implementation\BackgroundPipe.cs" />
+    <Compile Include="Pipes\Implementation\AsyncPipe.cs" />
     <Compile Include="Pipes\Implementation\ThreadPipe.cs" />
     <Compile Include="Pipes\Framework\IDonePipe.cs" />
     <Compile Include="Pipes\Framework\ILastPipe.cs" />
