@@ -10,16 +10,16 @@ namespace Rucker.Flow._Tests.Pipes
 
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
     [TestFixture]
-    public class FirstLambdaPipeTests
+    public class MidLambdaPipeTests
     {
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe    = new FirstLambdaPipe<string>(InfiniteProduction);
+            var pipe = new MidLambdaPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = InfiniteProduction() };
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
@@ -27,15 +27,15 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void ValuesProducedTwiceTest()
         {
-            var pipe = new FirstLambdaPipe<string>(InfiniteProduction);
+            var pipe = new MidLambdaPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = InfiniteProduction() };
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
@@ -46,11 +46,11 @@ namespace Rucker.Flow._Tests.Pipes
             var produce = new [] {"A", "B", "C"};
             var copy1 = new Queue<string>(produce);
 
-            var pipe = new FirstLambdaPipe<string>(() => EmptyableProduction(copy1));
+            var pipe = new MidLambdaPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = EmptyableProduction(copy1) };                        
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(produce.SequenceEqual(pipe.Produces));
+            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
 
@@ -61,8 +61,8 @@ namespace Rucker.Flow._Tests.Pipes
 
         [Test]
         public void FirstErrorTest()
-        {            
-            var pipe = new FirstLambdaPipe<string>(FirstErrorProduction);
+        {
+            var pipe = new MidLambdaPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = FirstErrorProduction() };
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -72,17 +72,7 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void LastErrorTest()
         {
-            var pipe = new FirstLambdaPipe<string>(LastErrorProduction);
-
-            Assert.Throws<Exception>(() => pipe.Produces.ToArray());
-
-            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
-        }
-
-        [Test]
-        public void OnlyErrorTest()
-        {
-            var pipe = new FirstLambdaPipe<string>(OnlyErrorProduction);
+            var pipe = new MidLambdaPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = LastErrorProduction() };
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -95,43 +85,22 @@ namespace Rucker.Flow._Tests.Pipes
             var produce = new[] { "A", "B", "C" };
             var copy1 = new Queue<string>(produce);
 
-            var pipe = new FirstLambdaPipe<string>(() => EmptyableProduction(copy1));
+            var pipe = new MidLambdaPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = EmptyableProduction(copy1) };
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
             prod.MoveNext();
 
-            Assert.AreEqual(produce.First(), prod.Current);
+            Assert.AreEqual(produce.First().ToLower(), prod.Current);
 
             Assert.AreEqual(PipeStatus.Working, pipe.Status);
 
             prod.MoveNext();
 
-            Assert.AreEqual(produce.Skip(1).First(), prod.Current);
+            Assert.AreEqual(produce.Skip(1).First().ToLower(), prod.Current);
 
             Assert.AreEqual(PipeStatus.Working, pipe.Status);
-        }
-
-        [Test]
-        public void StopStatusTest()
-        {
-            var pipe = new FirstLambdaPipe<string>(InfiniteProduction);
-            var prod = pipe.Produces.GetEnumerator();
-
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
-
-            prod.MoveNext();
-
-            Assert.AreEqual(InfiniteProduction().First(), prod.Current);
-
-            Assert.AreEqual(PipeStatus.Working, pipe.Status);
-
-            pipe.Stop();
-
-            Assert.IsFalse(prod.MoveNext());
-
-            Assert.AreEqual(PipeStatus.Stopped, pipe.Status);
         }
 
         #region Private Methods
