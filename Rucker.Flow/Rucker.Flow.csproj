@@ -81,6 +81,7 @@
     <Compile Include="_Tests\Classes\Reporters\TestingErrorReporter.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
     <Compile Include="_Tests\Jobs\EtlJobTests.cs" />
+    <Compile Include="_Tests\Pipes\LambdaLastPipeTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaMidPipeTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaFirstPipeTests.cs" />
     <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />

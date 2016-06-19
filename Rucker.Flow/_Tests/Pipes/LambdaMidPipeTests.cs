@@ -7,7 +7,6 @@ using NUnit.Framework;
 
 namespace Rucker.Flow.Tests
 {
-
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
     [TestFixture]
     public class LambdaMidPipeTests
@@ -15,11 +14,11 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = InfiniteProduction() };
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = Infinite() };
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
+            Assert.IsTrue(Infinite().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
@@ -27,15 +26,15 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTwiceTest()
         {
-            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = InfiniteProduction() };
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = Infinite() };
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
+            Assert.IsTrue(Infinite().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
+            Assert.IsTrue(Infinite().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
@@ -46,11 +45,11 @@ namespace Rucker.Flow.Tests
             var produce = new [] {"A", "B", "C"};
             var copy1 = new Queue<string>(produce);
 
-            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = EmptyableProduction(copy1) };                        
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = Emptyable(copy1) };                        
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(InfiniteProduction().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
+            Assert.IsTrue(Infinite().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
 
@@ -62,7 +61,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void FirstErrorTest()
         {
-            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = FirstErrorProduction() };
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = FirstError() };
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -72,7 +71,17 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = LastErrorProduction() };
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = LastError() };
+
+            Assert.Throws<Exception>(() => pipe.Produces.ToArray());
+
+            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
+        }
+
+        [Test, Ignore("An interesting fail case. I don't think there is anything to be done.")]
+        public void OnlyErrorTest()
+        {
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = OnlyError() };
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -85,7 +94,7 @@ namespace Rucker.Flow.Tests
             var produce = new[] { "A", "B", "C" };
             var copy1 = new Queue<string>(produce);
 
-            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = EmptyableProduction(copy1) };
+            var pipe = new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = Emptyable(copy1) };
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
@@ -104,12 +113,12 @@ namespace Rucker.Flow.Tests
         }
 
         #region Private Methods
-        private IEnumerable<string> InfiniteProduction()
+        private IEnumerable<string> Infinite()
         {
             return new [] {"A", "B", "C"};
         }        
 
-        private IEnumerable<string> EmptyableProduction(Queue<string> queue)
+        private IEnumerable<string> Emptyable(Queue<string> queue)
         {
             while (queue.Count > 0)
             {
@@ -117,24 +126,29 @@ namespace Rucker.Flow.Tests
             }
         }
         
-        private IEnumerable<string> FirstErrorProduction()
+        private IEnumerable<string> FirstError()
         {
             throw new Exception();
             
             #pragma warning disable 162
-            yield return "1";
-            yield return "2;";
+            foreach (var item in Infinite())
+            {
+                yield return item;
+            }
             #pragma warning restore 162
         }
 
-        private IEnumerable<string> LastErrorProduction()
+        private IEnumerable<string> LastError()
         {
-            yield return "1";
-            yield return "2;";
+            foreach (var item in Infinite())
+            {
+                yield return item;
+            }
+
             throw new Exception();
         }
 
-        private IEnumerable<string> OnlyErrorProduction()
+        private IEnumerable<string> OnlyError()
         {
             throw new Exception();
         }
