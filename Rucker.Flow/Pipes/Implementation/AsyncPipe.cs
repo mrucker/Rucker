@@ -10,6 +10,7 @@ namespace Rucker.Flow
     {
         #region Fields
         private readonly IFirstPipe<P> _firstPipe;
+        private BlockingCollection<P> _blockingCollection;
         #endregion
 
         #region Properties
@@ -27,26 +28,28 @@ namespace Rucker.Flow
         #region Public Methods
         public void Stop()
         {
-            _firstPipe.Stop();   
+            _firstPipe.Stop();
         }
         #endregion
 
         #region Private Methods
         private IEnumerable<P> Start()
         {
-            var blockingCollection = new BlockingCollection<P>();
-
-            Task.Run(() =>
+            if (_blockingCollection.IsCompleted || _blockingCollection == null)
             {
-                foreach (var produce in _firstPipe.Produces)
+                _blockingCollection = new BlockingCollection<P>();
+
+                Task.Run(() =>
                 {
-                    blockingCollection.Add(produce);
-                }
+                    foreach (var produce in _firstPipe.Produces)
+                    {
+                        _blockingCollection.Add(produce);
+                    }
 
-                blockingCollection.CompleteAdding();
-            });
-
-            return blockingCollection;
+                    _blockingCollection.CompleteAdding();
+                });
+            }
+            return _blockingCollection;
         }
         #endregion
     }
@@ -55,6 +58,7 @@ namespace Rucker.Flow
     {
         #region Fields
         private readonly IMidPipe<C, P> _midPipe;
+        private BlockingCollection<P> _blockingCollection;
         #endregion
 
         #region Properties
@@ -73,19 +77,21 @@ namespace Rucker.Flow
         #region Private Methods
         private IEnumerable<P> Start()
         {
-            var blockingCollection = new BlockingCollection<P>();
-
-            Task.Run(() =>
+            if (_blockingCollection.IsCompleted || _blockingCollection == null)
             {
-                foreach (var produce in _midPipe.Produces)
+                _blockingCollection = new BlockingCollection<P>();
+
+                Task.Run(() =>
                 {
-                    blockingCollection.Add(produce);
-                }
+                    foreach (var produce in _midPipe.Produces)
+                    {
+                        _blockingCollection.Add(produce);
+                    }
 
-                blockingCollection.CompleteAdding();
-            });
-
-            return blockingCollection;
+                    _blockingCollection.CompleteAdding();
+                });
+            }
+            return _blockingCollection;
         }
         #endregion
     }
