@@ -51,13 +51,14 @@
     <Compile Include="Jobs\Settings\ISetting.cs" />
     <Compile Include="Jobs\Settings\Setting.cs" />
     <Compile Include="Jobs\Settings\SettingSection.cs" />
-    <Compile Include="Pipes\Implementation\ThreadedPipe.cs" />
+    <Compile Include="Pipes\Implementation\BackgroundPipe.cs" />
+    <Compile Include="Pipes\Implementation\ThreadPipe.cs" />
     <Compile Include="Pipes\Framework\IDonePipe.cs" />
     <Compile Include="Pipes\Framework\ILastPipe.cs" />
     <Compile Include="Pipes\Framework\IMidPipe.cs" />
     <Compile Include="Pipes\Framework\IPipe.cs" />
     <Compile Include="Pipes\Framework\IFirstPipe.cs" />
-    <Compile Include="Pipes\Framework\Coupling.cs" />
+    <Compile Include="Pipes\Implementation\ConcatPipe.cs" />
     <Compile Include="Pipes\Framework\PipeStatus.cs" />
     <Compile Include="Jobs\Job.cs" />
     <Compile Include="Jobs\JobsJob.cs" />
@@ -66,8 +67,7 @@
     <Compile Include="Jobs\SqlJob.cs" />
     <Compile Include="Pipes\Implementation\LambdaPipe.cs" />
     <Compile Include="Pipes\Implementation\PollingPipe.cs" />
-    <Compile Include="Pipes\Implementation\ThrottlePipe.cs" />
-    <Compile Include="Pipes\Implementation\RetryPipe.cs" />
+    <Compile Include="Pipes\Implementation\CatchPipe.cs" />
     <Compile Include="_Tests\Classes\Jobs\DelayedEtlJob.cs" />
     <Compile Include="_Tests\Classes\Jobs\FailedEtlJob.cs" />
     <Compile Include="_Tests\Classes\Jobs\InitializingFailJob.cs" />
@@ -81,8 +81,8 @@
     <Compile Include="_Tests\Classes\Reporters\TestingErrorReporter.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
     <Compile Include="_Tests\Jobs\EtlJobTests.cs" />
-    <Compile Include="_Tests\Pipes\MidLambdaPipeTests.cs" />
-    <Compile Include="_Tests\Pipes\FirstLambdaPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\LambdaMidPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\LambdaFirstPipeTests.cs" />
     <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />
     <Compile Include="Trackers\IStateReporter.cs" />
     <Compile Include="Trackers\IErrorReporter.cs" />

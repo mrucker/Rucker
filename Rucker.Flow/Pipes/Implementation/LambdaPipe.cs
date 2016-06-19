@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace Rucker.Flow
 {
-    public class FirstLambdaPipe<P>: IFirstPipe<P>
+    public class LambdaFirstPipe<P>: IFirstPipe<P>
     {
         #region Fields
         private bool _stop;
         #endregion
 
         #region Constructor
-        public FirstLambdaPipe(Func<IEnumerable<P>> produces)
+        public LambdaFirstPipe(Func<IEnumerable<P>> produces)
         {
             Produces = Produce(produces);
         }
@@ -74,14 +74,14 @@ namespace Rucker.Flow
         #endregion
     }
 
-    public class MidLambdaPipe<C, P> : IMidPipe<C, P>
+    public class LambdaMidPipe<C, P> : IMidPipe<C, P>
     {
         #region Fields
         private readonly Func<IEnumerable<C>, IEnumerable<P>> _maps;
         #endregion
 
         #region Constructor
-        public MidLambdaPipe(Func<IEnumerable<C>, IEnumerable<P>> maps)
+        public LambdaMidPipe(Func<IEnumerable<C>, IEnumerable<P>> maps)
         {
             _maps = maps;
         }
@@ -130,14 +130,14 @@ namespace Rucker.Flow
         #endregion
     }
 
-    public class LastLambdaPipe<C>: ILastPipe<C>
+    public class LambdaLastPipe<C>: ILastPipe<C>
     {
         #region Private Method
         private readonly Action<IEnumerable<C>> _consumes;
         #endregion
 
         #region Constructor
-        public LastLambdaPipe(Action<IEnumerable<C>> consumes)
+        public LambdaLastPipe(Action<IEnumerable<C>> consumes)
         {
             _consumes = consumes;
         }

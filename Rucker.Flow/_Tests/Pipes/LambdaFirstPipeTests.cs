@@ -5,17 +5,17 @@ using System.Diagnostics.CodeAnalysis;
 using Rucker.Extensions;
 using NUnit.Framework;
 
-namespace Rucker.Flow._Tests.Pipes
+namespace Rucker.Flow.Tests
 {
 
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
     [TestFixture]
-    public class FirstLambdaPipeTests
+    public class LambdaFirstPipeTests
     {
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe    = new FirstLambdaPipe<string>(InfiniteProduction);
+            var pipe    = new LambdaFirstPipe<string>(InfiniteProduction);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -27,7 +27,7 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void ValuesProducedTwiceTest()
         {
-            var pipe = new FirstLambdaPipe<string>(InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -46,7 +46,7 @@ namespace Rucker.Flow._Tests.Pipes
             var produce = new [] {"A", "B", "C"};
             var copy1 = new Queue<string>(produce);
 
-            var pipe = new FirstLambdaPipe<string>(() => EmptyableProduction(copy1));
+            var pipe = new LambdaFirstPipe<string>(() => EmptyableProduction(copy1));
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -62,7 +62,7 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void FirstErrorTest()
         {            
-            var pipe = new FirstLambdaPipe<string>(FirstErrorProduction);
+            var pipe = new LambdaFirstPipe<string>(FirstErrorProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -72,7 +72,7 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void LastErrorTest()
         {
-            var pipe = new FirstLambdaPipe<string>(LastErrorProduction);
+            var pipe = new LambdaFirstPipe<string>(LastErrorProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -82,7 +82,7 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = new FirstLambdaPipe<string>(OnlyErrorProduction);
+            var pipe = new LambdaFirstPipe<string>(OnlyErrorProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -95,7 +95,7 @@ namespace Rucker.Flow._Tests.Pipes
             var produce = new[] { "A", "B", "C" };
             var copy1 = new Queue<string>(produce);
 
-            var pipe = new FirstLambdaPipe<string>(() => EmptyableProduction(copy1));
+            var pipe = new LambdaFirstPipe<string>(() => EmptyableProduction(copy1));
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
@@ -116,7 +116,7 @@ namespace Rucker.Flow._Tests.Pipes
         [Test]
         public void StopStatusTest()
         {
-            var pipe = new FirstLambdaPipe<string>(InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);

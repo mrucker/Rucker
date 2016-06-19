@@ -5,7 +5,7 @@ using Rucker.Extensions;
 
 namespace Rucker.Flow
 {            
-    internal sealed class FirstLastCoupling<P, C> : Coupling, IDonePipe where P : class, C
+    internal sealed class ConcatFirstLastPipe<P, C> : ConcatPipe, IDonePipe where P : class, C
     {
         #region Fields
         private readonly IFirstPipe<P> _first;
@@ -13,7 +13,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructors
-        internal FirstLastCoupling(IFirstPipe<P> first, ILastPipe<C> last) : base(first, last)
+        internal ConcatFirstLastPipe(IFirstPipe<P> first, ILastPipe<C> last) : base(first, last)
         {
             _first = first;
             _last  = last;
@@ -35,7 +35,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    internal sealed class FirstMidCoupling<P1, C1, P2> : Coupling, IFirstPipe<P2> where P1 : class, C1
+    internal sealed class ConcatFirstMidPipe<P1, C1, P2> : ConcatPipe, IFirstPipe<P2> where P1 : class, C1
     {
         #region Fields
         private readonly IFirstPipe<P1> _first;
@@ -47,7 +47,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructor
-        public FirstMidCoupling(IFirstPipe<P1> first, IMidPipe<C1, P2> mid) : base(first, mid)
+        public ConcatFirstMidPipe(IFirstPipe<P1> first, IMidPipe<C1, P2> mid) : base(first, mid)
         {            
             mid.Consumes = first.Produces;
 
@@ -64,7 +64,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    internal sealed class MidMidCoupling<C1, P1, C2, P2> : Coupling, IMidPipe<C1, P2> where P1 : class, C2
+    internal sealed class ConcatMidMidPipe<C1, P1, C2, P2> : ConcatPipe, IMidPipe<C1, P2> where P1 : class, C2
     {
         #region Fields
         private readonly IMidPipe<C1, P1> _mid1;
@@ -78,7 +78,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructors
-        public MidMidCoupling(IMidPipe<C1, P1> mid1, IMidPipe<C2, P2> mid2) : base(mid1, mid2)
+        public ConcatMidMidPipe(IMidPipe<C1, P1> mid1, IMidPipe<C2, P2> mid2) : base(mid1, mid2)
         {
             mid2.Consumes = mid1.Produces;
 
@@ -88,7 +88,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    internal sealed class MidLastCoupling<C1, P1, C2>: Coupling, ILastPipe<C1> where P1 : class, C2
+    internal sealed class ConcatMidLastPipe<C1, P1, C2>: ConcatPipe, ILastPipe<C1> where P1 : class, C2
     {
         #region Fields
         private readonly IMidPipe<C1, P1> _mid;
@@ -100,7 +100,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructors
-        internal MidLastCoupling(IMidPipe<C1, P1> mid, ILastPipe<C2> last) : base(mid, last)
+        internal ConcatMidLastPipe(IMidPipe<C1, P1> mid, ILastPipe<C2> last) : base(mid, last)
         {
             last.Consumes = mid.Produces;
 
@@ -117,10 +117,10 @@ namespace Rucker.Flow
         #endregion
     }    
 
-    public class Coupling: IPipe
+    public class ConcatPipe: IPipe
     {
         #region Fields
-        private readonly IEnumerable<IPipe> _coupledPipes;
+        private readonly IEnumerable<IPipe> _pipes;
         #endregion
 
         #region Properties
@@ -128,7 +128,7 @@ namespace Rucker.Flow
         {
             get
             {
-                var statuses = _coupledPipes.Select(p => p.Status).ToArray();
+                var statuses = _pipes.Select(p => p.Status).ToArray();
 
                 if (statuses.Any(s => s == PipeStatus.Errored)) return PipeStatus.Errored;
                 if (statuses.Any(s => s == PipeStatus.Working)) return PipeStatus.Working;
@@ -136,17 +136,17 @@ namespace Rucker.Flow
                 if (statuses.All(s => s == PipeStatus.Finished)) return PipeStatus.Finished;
                 
 
-                throw new Exception($"The pipeline has an invalid status chain: {_coupledPipes.Select(p => p.Status.ToString()).Cat("->")}");
+                throw new Exception($"The pipeline has an invalid status chain: {_pipes.Select(p => p.Status.ToString()).Cat("->")}");
             }
         }
 
-        protected IEnumerable<PipeStatus> Statuses => _coupledPipes.Select(p => p.Status);
+        protected IEnumerable<PipeStatus> Statuses => _pipes.Select(p => p.Status);
         #endregion
 
         #region Constructors
-        internal Coupling(IPipe one, IPipe two)
+        internal ConcatPipe(IPipe one, IPipe two)
         {
-            _coupledPipes = new [] { one, two }.SelectMany(p => (p as Coupling)?._coupledPipes ?? new[] { p } ).ToArray();
+            _pipes = new [] { one, two }.SelectMany(p => (p as ConcatPipe)?._pipes ?? new[] { p } ).ToArray();
         }
         #endregion
     }
