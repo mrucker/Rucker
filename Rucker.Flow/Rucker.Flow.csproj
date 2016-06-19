@@ -81,8 +81,8 @@
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
     <Compile Include="_Tests\Jobs\EtlJobTests.cs" />
     <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />
-    <Compile Include="Reporters\IStateReporter.cs" />
-    <Compile Include="Reporters\IErrorReporter.cs" />
+    <Compile Include="Trackers\IStateReporter.cs" />
+    <Compile Include="Trackers\IErrorReporter.cs" />
     <Compile Include="Trackers\Tracker.cs" />
     <Compile Include="_Tests\Classes\Readers\ReadDelay.cs" />
     <Compile Include="_Tests\Classes\Readers\ReadMemory.cs" />
