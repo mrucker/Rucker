@@ -120,8 +120,11 @@ namespace Rucker.Flow._Tests.Pipes
         private IEnumerable<string> FirstErrorProduction()
         {
             throw new Exception();
+            
+            #pragma warning disable 162
             yield return "1";
             yield return "2;";
+            #pragma warning restore 162
         }
 
         private IEnumerable<string> LastErrorProduction()
