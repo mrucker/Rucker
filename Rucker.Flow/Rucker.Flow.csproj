@@ -51,7 +51,7 @@
     <Compile Include="Jobs\Settings\ISetting.cs" />
     <Compile Include="Jobs\Settings\Setting.cs" />
     <Compile Include="Jobs\Settings\SettingSection.cs" />
-    <Compile Include="Pipes\Implementation\AsyncPipe.cs" />
+    <Compile Include="Pipes\Implementation\ThreadedPipe.cs" />
     <Compile Include="Pipes\Framework\IDonePipe.cs" />
     <Compile Include="Pipes\Framework\ILastPipe.cs" />
     <Compile Include="Pipes\Framework\IMidPipe.cs" />
@@ -64,10 +64,10 @@
     <Compile Include="Jobs\ActionJob.cs" />
     <Compile Include="Jobs\EtlJob.cs" />
     <Compile Include="Jobs\SqlJob.cs" />
-    <Compile Include="Pipes\Implementation\FirstLambdaPipe.cs" />
-    <Compile Include="Pipes\Implementation\PollPipe.cs" />
+    <Compile Include="Pipes\Implementation\LambdaPipe.cs" />
+    <Compile Include="Pipes\Implementation\PollingPipe.cs" />
     <Compile Include="Pipes\Implementation\ThrottlePipe.cs" />
-    <Compile Include="Pipes\Implementation\RetrytPipe.cs" />
+    <Compile Include="Pipes\Implementation\RetryPipe.cs" />
     <Compile Include="_Tests\Classes\Jobs\DelayedEtlJob.cs" />
     <Compile Include="_Tests\Classes\Jobs\FailedEtlJob.cs" />
     <Compile Include="_Tests\Classes\Jobs\InitializingFailJob.cs" />
