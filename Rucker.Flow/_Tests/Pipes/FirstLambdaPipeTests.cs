@@ -1,0 +1,163 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Rucker.Extensions;
+using NUnit.Framework;
+
+namespace Rucker.Flow._Tests.Pipes
+{
+    [TestFixture]
+    public class FirstLambdaPipeTests
+    {
+        [Test]
+        public void ValuesProducedTest()
+        {
+            var pipe    = new FirstLambdaPipe<string>(InfiniteProduction);
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+        }
+
+        [Test]
+        public void ValuesProducedTwiceTest()
+        {
+            var pipe = new FirstLambdaPipe<string>(InfiniteProduction);
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+
+            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+        }
+
+        [Test]
+        public void ValuesEmptiedTest()
+        {
+            var produce = new [] {"A", "B", "C"};
+            var copy1 = new Queue<string>(produce);
+
+            var pipe = new FirstLambdaPipe<string>(() => EmptyableProduction(copy1));
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            Assert.IsTrue(produce.SequenceEqual(pipe.Produces));
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+
+            Assert.IsTrue(pipe.Produces.None());
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+        }
+
+        [Test]
+        public void FirstErrorTest()
+        {            
+            var pipe = new FirstLambdaPipe<string>(FirstErrorProduction);
+
+            Assert.Throws<Exception>(() => pipe.Produces.ToArray());
+
+            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
+        }
+
+        [Test]
+        public void LastErrorTest()
+        {
+            var pipe = new FirstLambdaPipe<string>(LastErrorProduction);
+
+            Assert.Throws<Exception>(() => pipe.Produces.ToArray());
+
+            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
+        }
+
+        [Test]
+        public void OnlyErrorTest()
+        {
+            var pipe = new FirstLambdaPipe<string>(OnlyErrorProduction);
+
+            Assert.Throws<Exception>(() => pipe.Produces.ToArray());
+
+            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
+        }
+
+        [Test]
+        public void WorkingStatusTest()
+        {
+            var produce = new[] { "A", "B", "C" };
+            var copy1 = new Queue<string>(produce);
+
+            var pipe = new FirstLambdaPipe<string>(() => EmptyableProduction(copy1));
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            Assert.AreEqual(produce.First(), pipe.Produces.Take(1).Single());
+
+            Assert.AreEqual(PipeStatus.Working, pipe.Status);
+
+            Assert.AreEqual(produce.Skip(1).First(), pipe.Produces.Take(1).Single());
+
+            Assert.AreEqual(PipeStatus.Working, pipe.Status);
+        }
+
+        [Test]
+        public void StopStatusTest()
+        {
+            var pipe = new FirstLambdaPipe<string>(InfiniteProduction);
+            var prod = pipe.Produces.GetEnumerator();
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            prod.MoveNext();
+
+            Assert.AreEqual(InfiniteProduction().First(), prod.Current);
+
+            Assert.AreEqual(PipeStatus.Working, pipe.Status);
+
+            pipe.Stop();
+
+            Assert.IsFalse(prod.MoveNext());
+
+            Assert.AreEqual(PipeStatus.Stopped, pipe.Status);
+        }
+
+        #region Private Methods
+        private IEnumerable<string> InfiniteProduction()
+        {
+            return new [] {"A", "B", "C"};
+        }        
+
+        private IEnumerable<string> EmptyableProduction(Queue<string> queue)
+        {
+            while (queue.Count > 0)
+            {
+                yield return queue.Dequeue();
+            }
+        }
+
+        private IEnumerable<string> FirstErrorProduction()
+        {
+            throw new Exception();
+            yield return "1";
+            yield return "2;";
+        }
+
+        private IEnumerable<string> LastErrorProduction()
+        {
+            yield return "1";
+            yield return "2;";
+            throw new Exception();
+        }
+
+        private IEnumerable<string> OnlyErrorProduction()
+        {
+            throw new Exception();
+        }
+        #endregion
+    }
+}

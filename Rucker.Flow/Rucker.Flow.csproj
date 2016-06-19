@@ -64,6 +64,7 @@
     <Compile Include="Jobs\ActionJob.cs" />
     <Compile Include="Jobs\EtlJob.cs" />
     <Compile Include="Jobs\SqlJob.cs" />
+    <Compile Include="Pipes\Implementation\FirstLambdaPipe.cs" />
     <Compile Include="Pipes\Implementation\PollPipe.cs" />
     <Compile Include="Pipes\Implementation\ThrottlePipe.cs" />
     <Compile Include="Pipes\Implementation\RetrytPipe.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="_Tests\Classes\Reporters\TestingErrorReporter.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
     <Compile Include="_Tests\Jobs\EtlJobTests.cs" />
+    <Compile Include="_Tests\Pipes\FirstLambdaPipeTests.cs" />
     <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />
     <Compile Include="Trackers\IStateReporter.cs" />
     <Compile Include="Trackers\IErrorReporter.cs" />
@@ -102,6 +104,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

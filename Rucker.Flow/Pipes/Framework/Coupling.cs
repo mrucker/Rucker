@@ -120,7 +120,7 @@ namespace Rucker.Flow
     public class Coupling: IPipe
     {
         #region Fields
-        private readonly IEnumerable<IPipe> _pipes;
+        private readonly IEnumerable<IPipe> _coupledPipes;
         #endregion
 
         #region Properties
@@ -128,26 +128,25 @@ namespace Rucker.Flow
         {
             get
             {
-                var statuses = _pipes.Select(p => p.Status).ToArray();
+                var statuses = _coupledPipes.Select(p => p.Status).ToArray();
 
-                if(statuses.Contains(PipeStatus.Errored)) return PipeStatus.Errored;
-                if(statuses.Contains(PipeStatus.Working)) return PipeStatus.Working;
-                if(statuses.Contains(PipeStatus.Waiting)) return PipeStatus.Waiting;
+                if (statuses.Any(s => s == PipeStatus.Errored)) return PipeStatus.Errored;
+                if (statuses.Any(s => s == PipeStatus.Working)) return PipeStatus.Working;
+                if (statuses.Any(s => s == PipeStatus.Stopped)) return PipeStatus.Stopped;
+                if (statuses.All(s => s == PipeStatus.Finished)) return PipeStatus.Finished;
                 
-                if(statuses.All(s => s == PipeStatus.Stopped)) return PipeStatus.Stopped;
-                if(statuses.All(s => s == PipeStatus.Created)) return PipeStatus.Created;
 
-                throw new Exception($"The pipeline has an invalid status chain: {_pipes.Select(p => p.Status.ToString()).Cat("->")}");
+                throw new Exception($"The pipeline has an invalid status chain: {_coupledPipes.Select(p => p.Status.ToString()).Cat("->")}");
             }
         }
 
-        protected IEnumerable<PipeStatus> Statuses => _pipes.Select(p => p.Status);
+        protected IEnumerable<PipeStatus> Statuses => _coupledPipes.Select(p => p.Status);
         #endregion
 
         #region Constructors
         internal Coupling(IPipe one, IPipe two)
         {
-            _pipes = new [] { one, two }.SelectMany(p => (p as Coupling)?._pipes ?? new[] { p } ).ToArray();
+            _coupledPipes = new [] { one, two }.SelectMany(p => (p as Coupling)?._coupledPipes ?? new[] { p } ).ToArray();
         }
         #endregion
     }
