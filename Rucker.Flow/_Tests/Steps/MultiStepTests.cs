@@ -3,7 +3,6 @@ using Rucker.Testing;
 using NUnit.Framework;
 using Rucker.Data;
 
-
 namespace Rucker.Flow.Tests
 {
     [TestFixture]
