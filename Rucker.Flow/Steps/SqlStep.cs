@@ -4,7 +4,7 @@ using Rucker.Data;
 
 namespace Rucker.Flow
 {
-    public class SqlJob: Job
+    public class SqlStep: Step
     {        
         #region Properties
         public string Query { get; }
@@ -14,7 +14,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructor
-        public SqlJob(IQuerier querier, string query, int timeout, params object[] @params)
+        public SqlStep(IQuerier querier, string query, int timeout, params object[] @params)
         {
             Query   = query;
             Params  = @params;

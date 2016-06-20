@@ -6,15 +6,15 @@ using NUnit.Framework;
 namespace Rucker.Flow.Tests
 {
     [TestFixture]
-    public class JobsJobTests
+    public class MultiStepTests
     {
         [Test]
-        public void JobsJobRunsAllJobsOnce()
+        public void MultiStepRunsEachStepsOnlyOnce()
         {
-                using (var job = new JobsJob(new[] { new DelayedEtlJob(500), new DelayedEtlJob(500) }))
+                using (var step = new MultiStep(new[] { new DelayedEtlStep(500), new DelayedEtlStep(500) }))
                 {
                     var expExecutionTime = new TimeSpan(0, 0, 0, 1);
-                    var actExecutionTime = Test.ExecutionTime(job.Process);
+                    var actExecutionTime = Test.ExecutionTime(step.Process);
 
                     Assert.That(actExecutionTime, Is.EqualTo(expExecutionTime).Within(250).Milliseconds);
             }

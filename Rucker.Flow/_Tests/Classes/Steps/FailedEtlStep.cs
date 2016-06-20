@@ -2,9 +2,9 @@
 
 namespace Rucker.Flow.Tests
 {
-    public class FailedEtlJob : EtlJob<IRows, IRows>
+    public class FailedEtlStep : EtlStep<IRows, IRows>
     {
-        public FailedEtlJob()
+        public FailedEtlStep()
         {
             Reader = new ReadMemory();
             Writer = new WriteFailed();

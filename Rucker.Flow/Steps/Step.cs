@@ -1,17 +1,16 @@
 using System;
 using Rucker.Dispose;
-using Rucker.Flow;
 
 namespace Rucker.Flow
 {
-    public abstract class Job: Disposable
+    public abstract class Step: Disposable
     {
         #region Properties
         public Tracker Tracker { get; }
         #endregion
 
         #region Constructors
-        protected Job()
+        protected Step()
         {
             Tracker = new Tracker();
         }
@@ -41,7 +40,7 @@ namespace Rucker.Flow
         protected abstract void Initializing();
 
         /// <summary>
-        /// Where the work of the job should actually take place. 
+        /// Where the work of the step should actually take place. 
         /// </summary>
         protected abstract void Processing();
         #endregion

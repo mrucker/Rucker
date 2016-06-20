@@ -5,7 +5,7 @@ namespace Rucker.Flow
     public class SettingSection : ConfigurationSection, ISetting
     {
         /// <summary>
-        /// Maximum number of threads that can be used to process an ETL job
+        /// Maximum number of threads that can be used to process an ETL step
         /// </summary>
         /// <remarks>A value of -1 would allow an infinite number of threads</remarks>
         /// <remarks>A value of 0 or less than -1 would throw an exception</remarks>
@@ -21,7 +21,7 @@ namespace Rucker.Flow
         public int MaxPageSize => (int)this["maxPageSize"];
 
         /// <summary>
-        /// Maximum number of timeout exceptions allowed over the life of a job before aborting.
+        /// Maximum number of timeout exceptions allowed over the life of a step before aborting.
         /// When a timeout occurs the failed query will be retried until it works.
         /// </summary>
         /// <remarks>A value of -1 would allow infinite timeouts </remarks>

@@ -2,16 +2,16 @@
 
 namespace Rucker.Flow.Tests
 {
-    public class InitializingFailJob: Job
+    public class ProcessingFailStep: Step
     {
         protected override void Initializing()
         {
-            throw new Exception();
+
         }
 
         protected override void Processing()
         {
-            
+            throw new Exception();
         }
     }
 }

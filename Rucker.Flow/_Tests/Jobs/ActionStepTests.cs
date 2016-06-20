@@ -4,14 +4,14 @@ using NUnit.Framework;
 
 namespace Rucker.Flow.Tests
 {
-    public class ActionJobTests
+    public class ActionStepTests
     {
         [Test]
         public void StartFinishReporterTests()
         {
             var reporter = new TestingStateReporter();
 
-            var actionJob = new ActionJob(() => { })
+            var actionStep = new ActionStep(() => { })
             {
                 Tracker =
                 {
@@ -19,7 +19,7 @@ namespace Rucker.Flow.Tests
                 }
             };
 
-            actionJob.Process();
+            actionStep.Process();
 
             Assert.IsTrue(reporter.Started);
             Assert.IsTrue(reporter.Finished);
@@ -31,7 +31,7 @@ namespace Rucker.Flow.Tests
             var reporter  = new TestingErrorReporter();
             var exception = new Exception();
 
-            var actionJob = new ActionJob(() => { throw exception; })
+            var actionStep = new ActionStep(() => { throw exception; })
             {
                 Tracker =
                 {
@@ -39,7 +39,7 @@ namespace Rucker.Flow.Tests
                 }
             };
 
-            try { actionJob.Process(); } catch { }
+            try { actionStep.Process(); } catch { }
 
             Assert.Contains(exception, reporter.ReportedExceptions.ToArray());
             Assert.AreEqual(1, reporter.ReportedExceptions.Count());
@@ -50,7 +50,7 @@ namespace Rucker.Flow.Tests
         {
             var reporter  = new TestingProgressReporter();
 
-            var actionJob = new ActionJob(() => { })
+            var actionStep = new ActionStep(() => { })
             {
                 Tracker =
                 {
@@ -58,7 +58,7 @@ namespace Rucker.Flow.Tests
                 }
             };
 
-            actionJob.Process();
+            actionStep.Process();
 
             Assert.AreEqual(1, reporter.ProgressReports.Count());
             Assert.AreEqual(100, reporter.ProgressReports.Single().Percent);

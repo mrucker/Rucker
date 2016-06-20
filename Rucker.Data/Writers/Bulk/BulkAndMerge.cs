@@ -53,7 +53,7 @@ namespace Rucker.Data
             StageSchema = "dbo";
             DestSchema  = table.Schema;
 
-            //WARNING: if the StageTable is a global temp (i.e. ## instead of #) then deleting from it will break for multithreaded jobs
+            //WARNING: if the StageTable is a global temp (i.e. ## instead of #) then deleting from it will break for multithreaded steps
             StageTable = "#" + "Stage" + "_" + table.Name.Replace("#", "").TrimStart('[').TrimEnd(']');
             DestTable  = table.Name;
 

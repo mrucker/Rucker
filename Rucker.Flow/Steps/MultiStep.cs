@@ -5,45 +5,45 @@ using Rucker.Extensions;
 
 namespace Rucker.Flow
 {
-    public class JobsJob: Job
+    public class MultiStep: Step
     {
         #region Properties
-        protected IEnumerable<Job> Jobs { get; set; }
+        protected IEnumerable<Step> Steps { get; set; }
         #endregion
 
         #region Constructors
-        public JobsJob() : this(Enumerable.Empty<Job>())
+        public MultiStep() : this(Enumerable.Empty<Step>())
         { }
 
-        public JobsJob(IEnumerable<Job> jobs)
+        public MultiStep(IEnumerable<Step> steps)
         {
-            Jobs = jobs;
+            Steps = steps;
         }
         #endregion
 
         #region Overrides
         protected override void Initializing()
         {
-            Jobs = Jobs.ToArray();
+            Steps = Steps.ToArray();
         }
 
         protected sealed override void Processing()
         {
-            Jobs = Jobs.ToArray();
+            Steps = Steps.ToArray();
 
-            using (Tracker.Whole(Jobs.Select(j => j.Tracker), ToString()))
+            using (Tracker.Whole(Steps.Select(j => j.Tracker), ToString()))
             {
-                Parallel.ForEach(Jobs, new ParallelOptions { MaxDegreeOfParallelism = 1 }, j => j.Process());
+                Parallel.ForEach(Steps, new ParallelOptions { MaxDegreeOfParallelism = 1 }, j => j.Process());
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && Jobs != null)
+            if (disposing && Steps != null)
             {
-                foreach (var job in Jobs)
+                foreach (var step in Steps)
                 {
-                    job.Dispose();
+                    step.Dispose();
                 }
             }
 
@@ -52,7 +52,7 @@ namespace Rucker.Flow
 
         public override string ToString()
         {
-            return Jobs.None() ? "JobsJob.Empty()" : Jobs.Select(j => j.ToString()).Cat(", ");
+            return Steps.None() ? "MultiStep.Empty()" : Steps.Select(j => j.ToString()).Cat(", ");
         }
         #endregion
     }

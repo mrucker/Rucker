@@ -2,9 +2,9 @@
 
 namespace Rucker.Flow.Tests
 {
-    public class DelayedEtlJob : EtlJob<IRows, IRows>
+    public class DelayedEtlStep : EtlStep<IRows, IRows>
     {
-        public DelayedEtlJob(int delayTime)
+        public DelayedEtlStep(int delayTime)
         {
             Reader = new ReadDelay(delayTime/2);
             Writer = new WriteDelay(delayTime/2);

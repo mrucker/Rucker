@@ -10,18 +10,18 @@ using Rucker.Extensions;
 namespace Rucker.Flow
 {
     /// <summary>
-    /// Core of the ETL Framework. Represents a single ETL job to be processed by a Processor.
+    /// Core of the ETL Framework. Represents a single ETL step to be processed by a Processor.
     /// </summary>
     /// <typeparam name="TSource">Incoming, Source Type</typeparam>
     /// <typeparam name="TDest">Outgoing, Dest Type</typeparam>
-    public class EtlJob<TSource, TDest>: Job
+    public class EtlStep<TSource, TDest>: Step
     {
         #region Fields
         private IRead<TSource> _reader;
         private IWrite<TDest> _writer;
         private IEnumerable<IMap<TSource, TDest>> _mappers;
         private ISetting _setting;
-        private int? _jobSize;
+        private int? _stepSize;
         private int _totalTimeoutCount;
         #endregion
 
@@ -78,7 +78,7 @@ namespace Rucker.Flow
         }
 
         /// <summary>
-        /// Settings used during the job process
+        /// Settings used during the step process
         /// </summary>
         public ISetting Setting
         {
@@ -96,7 +96,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructors
-        public EtlJob()
+        public EtlStep()
         {
             Setting = new Setting();
         }
@@ -120,7 +120,7 @@ namespace Rucker.Flow
 
         public override string ToString()
         {
-            return base.ToString().Replace("EtlJob`2", "EtlJob");
+            return base.ToString().Replace("EtlStep`2", "EtlStep");
         }
         #endregion
 
@@ -259,7 +259,7 @@ namespace Rucker.Flow
         }
 
         /// <summary>
-        /// Reader.Size() / JobSettings.PageSize
+        /// Reader.Size() / Settings.PageSize
         /// </summary>
         /// <returns>Given the Reader and Settings returns the number of pages there are to process</returns>
         public int PageCount()
@@ -267,9 +267,9 @@ namespace Rucker.Flow
             if (Setting.MaxPageSize ==  0) throw new InvalidOperationException("Setting.MaxPageSize must be greater than 0");
             if (Setting.MaxPageSize == -1) return 1;
 
-            _jobSize = _jobSize ?? Reader.Size();
+            _stepSize = _stepSize ?? Reader.Size();
 
-            return (int)Math.Ceiling((decimal)_jobSize / Setting.MaxPageSize);
+            return (int)Math.Ceiling((decimal)_stepSize / Setting.MaxPageSize);
         }
         #endregion
     }

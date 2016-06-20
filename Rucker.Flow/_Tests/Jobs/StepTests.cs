@@ -6,16 +6,16 @@ namespace Rucker.Flow.Tests
 {
 
     [TestFixture]
-    public class JobTests
+    public class StepTests
     {
         [Test]
-        public void FailedJobTest1()
+        public void FailedStepTest1()
         {            
             var errorReporter = new TestingErrorReporter();
 
-            using (var job = new InitializingFailJob { Tracker = { ErrorReporters = { errorReporter } }})
+            using (var step = new InitializingFailStep { Tracker = { ErrorReporters = { errorReporter } }})
             {
-                var thrownException   = Assert.Throws<Exception>(job.Process);
+                var thrownException   = Assert.Throws<Exception>(step.Process);
                 var reportedException = errorReporter.ReportedExceptions.Single();
 
                 Assert.AreEqual(thrownException, reportedException);
@@ -23,13 +23,13 @@ namespace Rucker.Flow.Tests
         }
 
         [Test]
-        public void FailedJobTest2()
+        public void FailedStepTest2()
         {
             var errorReporter = new TestingErrorReporter();
 
-            using (var job = new ProcessingFailJob() { Tracker = { ErrorReporters = { errorReporter } } })
+            using (var step = new ProcessingFailStep() { Tracker = { ErrorReporters = { errorReporter } } })
             {
-                var thrownException = Assert.Throws<Exception>(job.Process);
+                var thrownException = Assert.Throws<Exception>(step.Process);
                 var reportedException = errorReporter.ReportedExceptions.Single();
 
                 Assert.AreEqual(thrownException, reportedException);

@@ -2,14 +2,14 @@
 
 namespace Rucker.Flow
 {
-    public class ActionJob: Job
+    public class ActionStep: Step
     {
         #region Properties
         public Action Action { get; }
         #endregion
 
         #region Constructor
-        public ActionJob(Action action)
+        public ActionStep(Action action)
         {
             Action = action;
         }
