@@ -14,6 +14,11 @@ namespace Rucker.Extensions
             return source.Provider.CreateQuery(Expression.Call(typeof(Queryable), "Take", new [] { source.ElementType }, source.Expression, Expression.Constant(count)));
         }
 
+        public static bool IsNullOrNone<TSource>(this IEnumerable<TSource> source)
+        {
+            return source == null || source.None();
+        }
+
         public static bool None<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             return !source.Any(predicate);

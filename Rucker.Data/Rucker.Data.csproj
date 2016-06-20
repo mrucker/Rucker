@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mappers\IMap.cs" />
+    <Compile Include="Mappers\MapByCast.cs" />
     <Compile Include="Meta\DatabaseService.cs" />
     <Compile Include="Meta\DotNetTypes.cs" />
     <Compile Include="Meta\MetaColumn.cs" />

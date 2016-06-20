@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace Rucker.Flow.Tests
 {
+    [TestFixture]
     public class ProgressTrackerTests
     {
         [Test]

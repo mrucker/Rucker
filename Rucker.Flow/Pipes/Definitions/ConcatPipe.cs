@@ -5,7 +5,7 @@ using Rucker.Extensions;
 
 namespace Rucker.Flow
 {
-    internal sealed class ConcatFirstLastPipe<P, C> : ConcatPipe, IDonePipe where P : class, C
+    internal sealed class ConcatFirstLastPipe<P, C> : ConcatPipe, IDonePipe where P : C
     {
         #region Fields
         private readonly IFirstPipe<P> _first;
@@ -18,7 +18,7 @@ namespace Rucker.Flow
             _first = first;
             _last  = last;
 
-            last.Consumes = first.Produces;
+            last.Consumes = first.Produces.Cast<C>();
         }
         #endregion
 
@@ -35,7 +35,7 @@ namespace Rucker.Flow
         #endregion
     }
 
-    internal sealed class ConcatFirstMidPipe<P1, C1, P2> : ConcatPipe, IFirstPipe<P2> where P1 : class, C1
+    internal sealed class ConcatFirstMidPipe<P1, C1, P2> : ConcatPipe, IFirstPipe<P2> where P1 : C1
     {
         #region Fields
         private readonly IFirstPipe<P1> _first;
@@ -49,7 +49,7 @@ namespace Rucker.Flow
         #region Constructor
         public ConcatFirstMidPipe(IFirstPipe<P1> first, IMidPipe<C1, P2> mid) : base(first, mid)
         {            
-            mid.Consumes = first.Produces;
+            mid.Consumes = first.Produces.Cast<C1>();
 
             _first = first;
             _mid   = mid;

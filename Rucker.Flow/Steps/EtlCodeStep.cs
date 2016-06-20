@@ -14,7 +14,7 @@ namespace Rucker.Flow
     /// </summary>
     /// <typeparam name="TSource">Incoming, Source Type</typeparam>
     /// <typeparam name="TDest">Outgoing, Dest Type</typeparam>
-    public class EtlStep<TSource, TDest>: Step
+    public class EtlCodeStep<TSource, TDest>: Step
     {
         #region Fields
         private IRead<TSource> _reader;
@@ -96,7 +96,7 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructors
-        public EtlStep()
+        public EtlCodeStep()
         {
             Setting = new Setting();
         }
@@ -104,23 +104,28 @@ namespace Rucker.Flow
 
         #region Overrides
         protected override void Initializing()
-        { }
-
-        protected sealed override void Processing()
         {
-            Setting = Setting ?? new Setting();
-            Mappers = Mappers ?? Enumerable.Empty<IMap<TSource, TDest>>();
+            if (Mappers.IsNullOrNone() && typeof(TSource) != typeof(TDest))
+            {
+                throw new ArgumentException("At least one Mapper has to be defined when the Source type doesn't equal the Dest type");
+            }
 
+            Setting = Setting ?? new Setting();
+            Mappers = Mappers.IsNullOrNone() ? new[] { new MapByCast<TSource, TDest>() } : Mappers.ToArray();
+        }
+
+        protected override void Processing()
+        {
             using (Tracker.Whole(PieceCount(), ToString()))
             {
-                //It is actually faster to do a Parallel.For than Parallel.ForEach because otherwise .NET will materialize every Page in order to count them
+                //It is actually faster to do a Parallel.For than Parallel.ForEach because otherwise .NET will materialize every pages in order to count them
                 Parallel.For(0, PageCount(), new ParallelOptions { MaxDegreeOfParallelism = Setting.MaxDegreeOfParallelism }, i => Load(Transform(Extract(i))));
             }
         }
 
         public override string ToString()
         {
-            return base.ToString().Replace("EtlStep`2", "EtlStep");
+            return base.ToString().Replace("EtlStep`2", "EtlCodeStep");
         }
         #endregion
 
@@ -151,16 +156,6 @@ namespace Rucker.Flow
 
         private IEnumerable<TDest> Transform(TSource page)
         {
-            if (Mappers.None() && typeof(TSource) != typeof(TDest))
-            {
-                throw new ArgumentException("At least one Mapper has to be defined when the Source type doesn't equal the Dest type");
-            }
-
-            if (Mappers.None() && typeof(TSource) == typeof(TDest))
-            {
-                yield return (TDest)(object)page;
-            }
-
             foreach (var mapper in Mappers)
             {
                 TDest map;

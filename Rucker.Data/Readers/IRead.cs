@@ -41,5 +41,10 @@ namespace Rucker.Data
         {
             return BaseRows.RowsToObjects<T>(reader.Read(skip, take));
         }
+
+        public static int PageCount<T>(this IRead<T> reader, int pageSize)
+        {
+            return pageSize == -1 ? 1 : (int)Math.Ceiling((double)reader.Size()/pageSize);
+        }
     }
 }
