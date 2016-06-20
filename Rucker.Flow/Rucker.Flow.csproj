@@ -72,11 +72,8 @@
     <Compile Include="Pipes\Definitions\LambdaPipe.cs" />
     <Compile Include="Pipes\Definitions\PollingPipe.cs" />
     <Compile Include="Pipes\Definitions\CatchPipe.cs" />
-    <Compile Include="_Tests\Classes\Steps\DelayedEtlCodeStep.cs" />
-    <Compile Include="_Tests\Classes\Steps\DelayedEtlPipeStep.cs" />
-    <Compile Include="_Tests\Classes\Steps\FailedEtlStep.cs" />
-    <Compile Include="_Tests\Classes\Steps\InitializingFailStep.cs" />
-    <Compile Include="_Tests\Classes\Steps\ProcessingFailStep.cs" />
+    <Compile Include="_Tests\Classes\Steps\FailInitializingStep.cs" />
+    <Compile Include="_Tests\Classes\Steps\FailProcessingStep.cs" />
     <Compile Include="_Tests\Classes\Writers\WriteFailed.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReport.cs" />
     <Compile Include="_Tests\Steps\EtlPipeStepTests.cs" />

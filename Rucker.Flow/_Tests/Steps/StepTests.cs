@@ -13,7 +13,7 @@ namespace Rucker.Flow.Tests
         {            
             var errorReporter = new TestingErrorReporter();
 
-            using (var step = new InitializingFailStep { Tracker = { ErrorReporters = { errorReporter } }})
+            using (var step = new FailInitializingStep { Tracker = { ErrorReporters = { errorReporter } }})
             {
                 var thrownException   = Assert.Throws<Exception>(step.Process);
                 var reportedException = errorReporter.ReportedExceptions.Single();
@@ -27,7 +27,7 @@ namespace Rucker.Flow.Tests
         {
             var errorReporter = new TestingErrorReporter();
 
-            using (var step = new ProcessingFailStep() { Tracker = { ErrorReporters = { errorReporter } } })
+            using (var step = new FailProcessingStep { Tracker = { ErrorReporters = { errorReporter } } })
             {
                 var thrownException = Assert.Throws<Exception>(step.Process);
                 var reportedException = errorReporter.ReportedExceptions.Single();
