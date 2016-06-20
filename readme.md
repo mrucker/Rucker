@@ -1,4 +1,4 @@
-A library .NET utilities primarily written to read, convert and write large data sets in any environment
+A .NET library written to read, manipulate and write large data sets while optimizing processing, memory and bandwidth.
 
 + Rucker.Core -- Contains extension methods, organizing interfaces, and universal type conversion
 + Rucker.Data -- Data structures for large data sets and ADO.Net wrappers to read and write these structures
