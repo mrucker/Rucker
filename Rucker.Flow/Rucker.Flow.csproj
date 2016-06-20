@@ -74,13 +74,13 @@
     <Compile Include="_Tests\Classes\Steps\ProcessingFailStep.cs" />
     <Compile Include="_Tests\Classes\Writers\WriteFailed.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReport.cs" />
-    <Compile Include="_Tests\Jobs\StepTests.cs" />
-    <Compile Include="_Tests\Jobs\MultiStepTests.cs" />
-    <Compile Include="_Tests\Jobs\ActionStepTests.cs" />
+    <Compile Include="_Tests\Steps\StepTests.cs" />
+    <Compile Include="_Tests\Steps\MultiStepTests.cs" />
+    <Compile Include="_Tests\Steps\ActionStepTests.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingStateReporter.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingErrorReporter.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
-    <Compile Include="_Tests\Jobs\EtlStepTests.cs" />
+    <Compile Include="_Tests\Steps\EtlStepTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaLastPipeTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaMidPipeTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaFirstPipeTests.cs" />
