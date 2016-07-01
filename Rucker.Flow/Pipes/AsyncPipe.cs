@@ -2,20 +2,15 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using Rucker.Dispose;
 
 namespace Rucker.Flow
 {
     /// <summary>
-    /// A pipe that runs in the background. It will only ever start at most one background thread.
-    /// If you want multiple threads you attach a threaded pipe upstream from this background pipe
+    /// A pipe that consumes and produces in the background. It will only start one additional thread.    
     /// </summary>
-    internal sealed class AsyncMidPipe<T> : IMidPipe<T, T>
+    internal sealed class AsyncMidPipe<T> : Disposable, IMidPipe<T, T>
     {
-        #region Fields
-        [ThreadStatic]
-        private static BlockingCollection<T> _blockingCollection;
-        #endregion
-
         #region Properties
         public PipeStatus Status { get; private set; }
         public IEnumerable<T> Produces => Asynchronous();
@@ -24,16 +19,8 @@ namespace Rucker.Flow
 
         #region Private Methods
         private IEnumerable<T> Asynchronous()
-        {            
-            if (_blockingCollection == null || _blockingCollection.IsCompleted)
-            {
-                if (_blockingCollection != null && !_blockingCollection.IsCompleted)
-                {
-                    return _blockingCollection; 
-                }
-
-                _blockingCollection = new BlockingCollection<T>();
-            }
+        {
+            var block = new BlockingCollection<T>();
 
             Task.Run(() =>
             {
@@ -43,7 +30,7 @@ namespace Rucker.Flow
 
                     foreach (var produce in Consumes)
                     {
-                        _blockingCollection.Add(produce);
+                        block.Add(produce);
                     }
                 }
                 catch (Exception)
@@ -53,41 +40,41 @@ namespace Rucker.Flow
                 }
 
                 Status = PipeStatus.Finished;
-            });            
+            });
 
-            return _blockingCollection;
+            return block.GetConsumingEnumerable();
         }
         #endregion
     }
 
-    internal sealed class AsyncDonePipe : IDonePipe
+    internal sealed class AsyncClosedPipe : Disposable, IClosedPipe
     {
         #region Fields
         [ThreadStatic]
         private static Task _task;
-        private readonly IDonePipe _done;
+        private readonly IClosedPipe _closed;
         #endregion
 
         #region Constructor
-        public AsyncDonePipe(IDonePipe done)
+        public AsyncClosedPipe(IClosedPipe closed)
         {
-            _done = done;            
+            _closed = closed;            
         }
         #endregion
 
         #region Properties
-        public PipeStatus Status => _done.Status;
+        public PipeStatus Status => _closed.Status;
         #endregion
 
         #region Public Methods
         public void Start()
         {
-            _task = _task ?? Task.Run((Action)_done.Start);
+            _task = _task ?? Task.Run((Action)_closed.Start);
         }
 
         public void Stop()
         {
-            _done.Stop();
+            _closed.Stop();
         }
         #endregion
     }

@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Rucker.Dispose;
 
 namespace Rucker.Flow
 {
-    public class LambdaFirstPipe<P>: IFirstPipe<P>
+    public class LambdaFirstPipe<P>: Disposable, IFirstPipe<P>
     {
         #region Fields
         private bool _stop;
         #endregion
 
         #region Constructor
-        public LambdaFirstPipe(Func<IEnumerable<P>> produces)
+        public LambdaFirstPipe(Func<IEnumerable<P>> lambda)
         {
-            Produces = Produce(produces);
+            Produces = Produce(lambda);
         }
         #endregion
 
@@ -33,11 +34,10 @@ namespace Rucker.Flow
         /// <summary>
         /// Terrifying but necessary to handle exceptions correctly taken from here (http://stackoverflow.com/a/12060223/1066291)
         /// </summary>
-        private IEnumerable<P> Produce(Func<IEnumerable<P>> produces)
+        private IEnumerable<P> Produce(Func<IEnumerable<P>> produce)
         {
             if(_stop) { throw new Exception("This pipe has been stopped");}
-
-            _stop = false;
+            
             Status = PipeStatus.Working;
 
             IEnumerator<P> enumerator = null;
@@ -47,7 +47,7 @@ namespace Rucker.Flow
                 P ret;
                 try
                 {
-                    enumerator = enumerator ?? produces().GetEnumerator();
+                    enumerator = enumerator ?? produce().GetEnumerator();
 
                     if (!enumerator.MoveNext())
                     {
@@ -70,20 +70,20 @@ namespace Rucker.Flow
                 
                 yield return ret;
             }
-        }
+        }        
         #endregion
     }
 
-    public class LambdaMidPipe<C, P> : IMidPipe<C, P>
+    public class LambdaMidPipe<C, P> : Disposable, IMidPipe<C, P>
     {
         #region Fields
-        private readonly Func<IEnumerable<C>, IEnumerable<P>> _maps;
+        private readonly Func<IEnumerable<C>, IEnumerable<P>> _lambda;
         #endregion
 
         #region Constructor
-        public LambdaMidPipe(Func<IEnumerable<C>, IEnumerable<P>> maps)
+        public LambdaMidPipe(Func<IEnumerable<C>, IEnumerable<P>> lambda)
         {
-            _maps = maps;
+            _lambda = lambda;
         }
         #endregion
 
@@ -108,7 +108,7 @@ namespace Rucker.Flow
                 P ret;
                 try
                 {
-                    enumerator = enumerator ?? _maps(Consumes).GetEnumerator();
+                    enumerator = enumerator ?? _lambda(Consumes).GetEnumerator();
 
                     if (!enumerator.MoveNext())
                     {
@@ -130,16 +130,16 @@ namespace Rucker.Flow
         #endregion
     }
 
-    public class LambdaLastPipe<C>: ILastPipe<C>
+    public class LambdaLastPipe<C>: Disposable, ILastPipe<C>
     {
         #region Private Method
-        private readonly Action<IEnumerable<C>> _consumes;
+        private readonly Action<IEnumerable<C>> _lambda;
         #endregion
 
         #region Constructor
-        public LambdaLastPipe(Action<IEnumerable<C>> consumes)
+        public LambdaLastPipe(Action<IEnumerable<C>> lambda)
         {
-            _consumes = consumes;
+            _lambda = lambda;
         }
         #endregion
 
@@ -155,7 +155,7 @@ namespace Rucker.Flow
 
             try
             {
-                _consumes(Consumes);
+                _lambda(Consumes);
             }
             catch (Exception)
             {

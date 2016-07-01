@@ -22,13 +22,13 @@ namespace Rucker.Flow
                 _finish      = finish;
                 _description = description;
 
-                if (_description != null) Test.WriteMessage($"Starting {_description}");
+                if (_description != null) Test.WriteLine($"Starting {_description}");
             }
 
             public void Dispose()
             {
                 _finish();
-                if(_description != null) Test.WriteMessage($"Finished {_description}");
+                if(_description != null) Test.WriteLine($"Finished {_description}");
             }
         }
         #endregion
@@ -115,7 +115,7 @@ namespace Rucker.Flow
                 reporter.Report(exception);
             }            
             
-            if(description != null) Test.WriteMessage($"Failed {description}");
+            if(description != null) Test.WriteLine($"Failed {description}");
         }
         #endregion
 

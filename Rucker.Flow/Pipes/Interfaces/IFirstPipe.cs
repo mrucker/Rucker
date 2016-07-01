@@ -16,7 +16,7 @@ namespace Rucker.Flow
             return new ConcatFirstMidPipe<P1, C1, P2>(first, mid);
         }
 
-        public static IDonePipe Then<P1, C1>(this IFirstPipe<P1> first, ILastPipe<C1> last) where P1 : C1
+        public static IClosedPipe Then<P1, C1>(this IFirstPipe<P1> first, ILastPipe<C1> last) where P1 : C1
         {
             return new ConcatFirstLastPipe<P1, C1>(first, last);
         }
@@ -30,7 +30,5 @@ namespace Rucker.Flow
         {
             return new ConcatFirstMidPipe<P, P, P>(first, new AsyncMidPipe<P>());
         }
-
-        
     }
 }

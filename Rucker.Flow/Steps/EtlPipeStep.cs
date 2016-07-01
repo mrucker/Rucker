@@ -9,11 +9,18 @@ namespace Rucker.Flow
             var readPipe  = new ReadPipe<TSource>(Reader, Setting.MaxPageSize);
             var mapPipe   = new MapPipe<TSource, TDest>(Mappers.ToArray());
             var writePipe = new WritePipe<TDest>(Writer);
+            var wholePipe = readPipe.Then(mapPipe).Then(writePipe).Thread(Setting.MaxDegreeOfParallelism);
 
             using (Tracker.Whole(1, ToString()))
             {
-                readPipe.Then(mapPipe).Then(writePipe).Thread(Setting.MaxDegreeOfParallelism).Start();
+                wholePipe.Start();
+                wholePipe.Dispose();
             }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString().Replace("EtlPipeStep`2", "EtlPipeStep");
         }
     }
 }

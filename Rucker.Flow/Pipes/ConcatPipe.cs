@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Rucker.Dispose;
 using Rucker.Extensions;
 
 namespace Rucker.Flow
 {
-    internal sealed class ConcatFirstLastPipe<P, C> : ConcatPipe, IDonePipe where P : C
+    internal sealed class ConcatFirstLastPipe<P, C> : ConcatPipe, IClosedPipe where P : C
     {
         #region Fields
         private readonly IFirstPipe<P> _first;
@@ -117,7 +118,7 @@ namespace Rucker.Flow
         #endregion
     }    
 
-    public class ConcatPipe: IPipe
+    public class ConcatPipe: Disposable, IPipe
     {
         #region Fields
         private readonly IEnumerable<IPipe> _pipes;
@@ -134,7 +135,7 @@ namespace Rucker.Flow
                 if (statuses.Any(s => s == PipeStatus.Working)) return PipeStatus.Working;
                 if (statuses.Any(s => s == PipeStatus.Stopped)) return PipeStatus.Stopped;
                 if (statuses.All(s => s == PipeStatus.Finished)) return PipeStatus.Finished;
-                
+                if (statuses.All(s => s == PipeStatus.Created)) return PipeStatus.Created;
 
                 throw new Exception($"The pipeline has an invalid status chain: {_pipes.Select(p => p.Status.ToString()).Cat("->")}");
             }
@@ -147,6 +148,21 @@ namespace Rucker.Flow
         internal ConcatPipe(IPipe one, IPipe two)
         {
             _pipes = new [] { one, two }.SelectMany(p => (p as ConcatPipe)?._pipes ?? new[] { p } ).ToArray();
+        }
+        #endregion
+
+        #region Disposable Pattern
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                foreach (var pipe in _pipes)
+                {
+                    pipe.Dispose();
+                }    
+            }
+
+            base.Dispose(disposing);
         }
         #endregion
     }

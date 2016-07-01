@@ -66,7 +66,7 @@ namespace Rucker.Testing
             return obj.ToString() == obj.GetType().FullName ? obj.GetType().Name : obj.ToString();
         }
 
-        public static void WriteMessage(string message)
+        public static void WriteLine(string message)
         {
             if (message == null) return;
 

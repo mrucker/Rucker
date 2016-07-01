@@ -125,7 +125,7 @@ namespace Rucker.Flow
 
         public override string ToString()
         {
-            return base.ToString().Replace("EtlStep`2", "EtlCodeStep");
+            return base.ToString().Replace("EtlCodeStep`2", "EtlCodeStep");
         }
         #endregion
 

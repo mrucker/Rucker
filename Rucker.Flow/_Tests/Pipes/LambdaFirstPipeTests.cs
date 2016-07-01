@@ -15,7 +15,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe    = new LambdaFirstPipe<string>(InfiniteProduction);
+            var pipe    = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)InfiniteProduction);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -27,7 +27,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTwiceTest()
         {
-            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)InfiniteProduction);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -62,7 +62,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void FirstErrorTest()
         {            
-            var pipe = new LambdaFirstPipe<string>(FirstErrorProduction);
+            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)FirstErrorProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -72,7 +72,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = new LambdaFirstPipe<string>(LastErrorProduction);
+            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)LastErrorProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -82,7 +82,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = new LambdaFirstPipe<string>(OnlyErrorProduction);
+            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)OnlyErrorProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -116,7 +116,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void StopStatusTest()
         {
-            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)InfiniteProduction);
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
