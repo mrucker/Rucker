@@ -15,9 +15,13 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe    = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
 
             Assert.IsTrue(InfiniteProduction().SequenceEqual(pipe.Produces));
 
@@ -27,7 +31,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTwiceTest()
         {
-            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -62,7 +66,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void FirstErrorTest()
         {            
-            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)FirstErrorProduction);
+            var pipe = new LambdaFirstPipe<string>(ErrorFirstProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -72,7 +76,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)LastErrorProduction);
+            var pipe = new LambdaFirstPipe<string>(ErrorLastProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -82,7 +86,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)OnlyErrorProduction);
+            var pipe = new LambdaFirstPipe<string>(ErrorOnlyProduction);
 
             Assert.Throws<Exception>(() => pipe.Produces.ToArray());
 
@@ -116,7 +120,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void StopStatusTest()
         {
-            var pipe = new LambdaFirstPipe<string>((Func<IEnumerable<string>>)InfiniteProduction);
+            var pipe = new LambdaFirstPipe<string>(InfiniteProduction);
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
@@ -135,12 +139,12 @@ namespace Rucker.Flow.Tests
         }
 
         #region Private Methods
-        private IEnumerable<string> InfiniteProduction()
+        private static IEnumerable<string> InfiniteProduction()
         {
             return new [] {"A", "B", "C"};
-        }        
+        }
 
-        private IEnumerable<string> EmptyableProduction(Queue<string> queue)
+        private static IEnumerable<string> EmptyableProduction(Queue<string> queue)
         {
             while (queue.Count > 0)
             {
@@ -148,7 +152,7 @@ namespace Rucker.Flow.Tests
             }
         }
         
-        private IEnumerable<string> FirstErrorProduction()
+        private static IEnumerable<string> ErrorFirstProduction()
         {
             throw new Exception();
             
@@ -158,14 +162,14 @@ namespace Rucker.Flow.Tests
             #pragma warning restore 162
         }
 
-        private IEnumerable<string> LastErrorProduction()
+        private static IEnumerable<string> ErrorLastProduction()
         {
             yield return "1";
             yield return "2;";
             throw new Exception();
         }
 
-        private IEnumerable<string> OnlyErrorProduction()
+        private static IEnumerable<string> ErrorOnlyProduction()
         {
             throw new Exception();
         }

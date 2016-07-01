@@ -104,20 +104,20 @@
     <Compile Include="Writers\WriteCsv.cs" />
     <Compile Include="Testing\TestCsvFile.cs" />
     <Compile Include="Testing\TestDbTable.cs" />
-    <Compile Include="_Tests\Data\Meta\DatabaseServiceTests.cs" />
-    <Compile Include="_Tests\Data\Queriers\IQuerierTests.cs" />
-    <Compile Include="_Tests\Data\Readers\ReadSqlQueryPre2012Tests.cs" />
-    <Compile Include="_Tests\Data\Rows\BaseRowsTests.cs" />
-    <Compile Include="_Tests\Data\Rows\DicionaryRowTests.cs" />
-    <Compile Include="_Tests\Data\Rows\EqualColumnValuesTests.cs" />
-    <Compile Include="_Tests\Data\Rows\IRowTests.cs" />
-    <Compile Include="_Tests\Data\Rows\ObjectRowTests.cs" />
-    <Compile Include="_Tests\Data\Throttling\TokenBucketTests.cs" />
-    <Compile Include="_Tests\Data\Uris\FileUriTests.cs" />
-    <Compile Include="_Tests\Data\Uris\TableUriTests.cs" />
-    <Compile Include="_Tests\Data\Uris\UriTests.cs" />
-    <Compile Include="_Tests\Data\Writers\WritBulkAndMergeTests.cs" />
-    <Compile Include="_Tests\Data\Writers\WriteBulkTests.cs" />
+    <Compile Include="_Tests\Meta\DatabaseServiceTests.cs" />
+    <Compile Include="_Tests\Queriers\IQuerierTests.cs" />
+    <Compile Include="_Tests\Readers\ReadSqlQueryPre2012Tests.cs" />
+    <Compile Include="_Tests\Rows\BaseRowsTests.cs" />
+    <Compile Include="_Tests\Rows\DicionaryRowTests.cs" />
+    <Compile Include="_Tests\Rows\EqualColumnValuesTests.cs" />
+    <Compile Include="_Tests\Rows\IRowTests.cs" />
+    <Compile Include="_Tests\Rows\ObjectRowTests.cs" />
+    <Compile Include="_Tests\Throttling\TokenBucketTests.cs" />
+    <Compile Include="_Tests\Uris\FileUriTests.cs" />
+    <Compile Include="_Tests\Uris\TableUriTests.cs" />
+    <Compile Include="_Tests\Uris\UriTests.cs" />
+    <Compile Include="_Tests\Writers\WritBulkAndMergeTests.cs" />
+    <Compile Include="_Tests\Writers\WriteBulkTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
