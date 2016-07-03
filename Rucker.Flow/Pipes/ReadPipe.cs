@@ -10,12 +10,12 @@ namespace Rucker.Flow
     public class ReadPipe<T>: LambdaFirstPipe<T>
     {
         #region Classes
-        private class ThreadedEnumerable : IEnumerable<T>
+        private class MostlyThreadSafePagedEnumerable : IEnumerable<T>
         {
             private readonly IRead<T> _reader;
             private readonly int _pageSize;
 
-            public ThreadedEnumerable(IRead<T> reader, int pageSize)
+            public MostlyThreadSafePagedEnumerable(IRead<T> reader, int pageSize)
             {
                 _reader = reader;
                 _pageSize = pageSize;
@@ -23,7 +23,7 @@ namespace Rucker.Flow
 
             public IEnumerator<T> GetEnumerator()
             {
-                return new ThreadedEnumerator(_reader, _pageSize);
+                return new MostlyThreadSafePagedEnumerator(_reader, _pageSize);
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -37,7 +37,7 @@ namespace Rucker.Flow
         /// Because we know exactly how our pipe will be called and used we can cheat a little bit to get around these shortcomings. This implementation is in no way safe for generalized use thus why I've made them private classes.
         /// </summary>
         [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-        private class ThreadedEnumerator : IEnumerator<T>
+        private class MostlyThreadSafePagedEnumerator : IEnumerator<T>
         {
             [ThreadStatic]
             private static int LocalIndex;
@@ -47,7 +47,7 @@ namespace Rucker.Flow
 
             private readonly IRead<T> _reader;
 
-            public ThreadedEnumerator(IRead<T> reader, int size)
+            public MostlyThreadSafePagedEnumerator(IRead<T> reader, int size)
             {
                 _reader = reader;
                 
@@ -82,9 +82,14 @@ namespace Rucker.Flow
                 GlobalIndex[_reader] = -1;
             }
 
-            public T Current => _reader.Read(LocalIndex * GlobalSize[_reader], GlobalSize[_reader]);
+            public T Current => CurrentPage();
 
             object IEnumerator.Current => Current;
+
+            private T CurrentPage()
+            {
+                return _reader.Read(LocalIndex * GlobalSize[_reader], GlobalSize[_reader]);
+            }
         }
         #endregion
 
@@ -97,7 +102,6 @@ namespace Rucker.Flow
         {
             _reader = reader;
         }
-
         #endregion
 
         #region Disposable Pattern
@@ -115,7 +119,7 @@ namespace Rucker.Flow
         #region Private Methods
         private static Func<IEnumerable<T>> Read(IRead<T> reader, int pageSize)
         {
-            var readEnumerable = new ThreadedEnumerable(reader, pageSize);
+            var readEnumerable = new MostlyThreadSafePagedEnumerable(reader, pageSize);
 
             return () => readEnumerable;
         }

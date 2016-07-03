@@ -22,7 +22,7 @@ namespace Rucker.Flow
         {
             var block = new BlockingCollection<T>();
 
-            Task.Run(() =>
+            var task = Task.Run(() =>
             {
                 try
                 {
@@ -33,16 +33,26 @@ namespace Rucker.Flow
                         block.Add(produce);
                     }
                 }
+
                 catch (Exception)
                 {
                     Status = PipeStatus.Errored;
                     throw;
                 }
-
+                finally
+                {
+                    block.CompleteAdding();
+                }
+                
                 Status = PipeStatus.Finished;
             });
 
-            return block.GetConsumingEnumerable();
+            foreach (var item in block.GetConsumingEnumerable())
+            {
+                yield return item;
+            }
+
+            task.Wait();
         }
         #endregion
     }

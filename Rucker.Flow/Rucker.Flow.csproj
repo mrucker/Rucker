@@ -71,10 +71,14 @@
     <Compile Include="Steps\SqlStep.cs" />
     <Compile Include="Pipes\LambdaPipe.cs" />
     <Compile Include="Pipes\Control\PollPipe.cs" />
+    <Compile Include="_Tests\Classes\Readers\ReadFunc.cs" />
     <Compile Include="_Tests\Classes\Steps\FailInitializingStep.cs" />
     <Compile Include="_Tests\Classes\Steps\FailProcessingStep.cs" />
     <Compile Include="_Tests\Classes\Writers\WriteFailed.cs" />
     <Compile Include="_Tests\Classes\Reporters\TestingProgressReport.cs" />
+    <Compile Include="_Tests\Pipes\AsyncPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\LambdaFirstPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\ReadPipeTests.cs" />
     <Compile Include="_Tests\Steps\EtlPipeStepTests.cs" />
     <Compile Include="_Tests\Steps\StepTests.cs" />
     <Compile Include="_Tests\Steps\MultiStepTests.cs" />
@@ -85,7 +89,7 @@
     <Compile Include="_Tests\Steps\EtlCodeStepTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaLastPipeTests.cs" />
     <Compile Include="_Tests\Pipes\LambdaMidPipeTests.cs" />
-    <Compile Include="_Tests\Pipes\LambdaFirstPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\InterfaceTests\IFirstPipeTests.cs" />
     <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />
     <Compile Include="Track\IStateReporter.cs" />
     <Compile Include="Track\IErrorReporter.cs" />
