@@ -34,7 +34,7 @@ namespace Rucker.Flow
 
         public static IFirstPipe<P> Async<P>(this IFirstPipe<P> first)
         {
-            return new ConcatFirstMidPipe<P, P, P>(first, new AsyncMidPipe<P>());
+            return new ConcatFirstMidPipe<P, P, P>(first, new AsyncPipe<P>());
         }
     }
 }

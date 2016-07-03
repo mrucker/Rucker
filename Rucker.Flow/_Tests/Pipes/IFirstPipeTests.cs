@@ -7,20 +7,35 @@ using Rucker.Extensions;
 using NUnit.Framework;
 
 namespace Rucker.Flow.Tests
-{    
+{
+    [TestFixture(arguments: "AsyncPipe")]
+    [TestFixture(arguments: "ReadPipe")]
+    [TestFixture(arguments: "LambdaPipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
-    [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]    
+    [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
     public class IFirstPipeTests
     {
         #region Fields
         private readonly Func<Func<IEnumerable<string>>, IFirstPipe<string>> _firstPipeFactory;
         #endregion
 
-
         #region Constructors
-        public IFirstPipeTests(Func<Func<IEnumerable<string>>, IFirstPipe<string>> firstPipeFactory)
+        public IFirstPipeTests(string firstPipeType)
         {
-            _firstPipeFactory = firstPipeFactory;
+            if (firstPipeType == "AsyncPipe")
+            {
+                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Async();
+            }
+
+            if (firstPipeType == "ReadPipe")
+            {
+                _firstPipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
+            }
+
+            if (firstPipeType == "LambdaPipe")
+            {
+                _firstPipeFactory = production => new LambdaFirstPipe<string>(production);
+            }
         }
         #endregion
 
@@ -137,7 +152,7 @@ namespace Rucker.Flow.Tests
 
             pipe.Stop();
 
-            Assert.IsFalse(prod.MoveNext());
+            while(prod.MoveNext()) { }
 
             Assert.AreEqual(PipeStatus.Stopped, pipe.Status);
         }

@@ -9,7 +9,7 @@ namespace Rucker.Flow
     /// <summary>
     /// A pipe that consumes and produces in the background. It will only start one additional thread.    
     /// </summary>
-    internal sealed class AsyncMidPipe<T> : Disposable, IMidPipe<T, T>
+    internal sealed class AsyncPipe<T> : Disposable, IMidPipe<T, T>
     {
         #region Properties
         public PipeStatus Status { get; private set; }
@@ -21,38 +21,39 @@ namespace Rucker.Flow
         private IEnumerable<T> Asynchronous()
         {
             var block = new BlockingCollection<T>();
-
+            
             var task = Task.Run(() =>
             {
                 try
                 {
-                    Status = PipeStatus.Working;
-
                     foreach (var produce in Consumes)
                     {
                         block.Add(produce);
                     }
                 }
-
-                catch (Exception)
-                {
-                    Status = PipeStatus.Errored;
-                    throw;
-                }
                 finally
                 {
                     block.CompleteAdding();
-                }
-                
-                Status = PipeStatus.Finished;
+                }               
             });
+
+            Status = PipeStatus.Working;
 
             foreach (var item in block.GetConsumingEnumerable())
             {
                 yield return item;
             }
 
-            task.Wait();
+            try
+            {
+                task.Wait();
+                Status = PipeStatus.Finished;
+            }
+            catch(Exception)
+            {
+                Status = PipeStatus.Errored;
+                throw;
+            }
         }
         #endregion
     }

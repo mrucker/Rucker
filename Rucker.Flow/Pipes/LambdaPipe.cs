@@ -27,6 +27,7 @@ namespace Rucker.Flow
         public void Stop()
         {
             _stop = true;
+            Status = PipeStatus.Stopped;
         }
         #endregion
 
