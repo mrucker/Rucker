@@ -10,12 +10,12 @@ namespace Rucker.Flow
     public class ReadPipe<T>: LambdaFirstPipe<T>
     {
         #region Classes
-        private class GlobalReadEnumerable : IEnumerable<T>
+        private class ThreadedEnumerable : IEnumerable<T>
         {
             private readonly IRead<T> _reader;
             private readonly int _pageSize;
 
-            public GlobalReadEnumerable(IRead<T> reader, int pageSize)
+            public ThreadedEnumerable(IRead<T> reader, int pageSize)
             {
                 _reader = reader;
                 _pageSize = pageSize;
@@ -23,7 +23,7 @@ namespace Rucker.Flow
 
             public IEnumerator<T> GetEnumerator()
             {
-                return new GlobalReadEnumerator(_reader, _pageSize);
+                return new ThreadedEnumerator(_reader, _pageSize);
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -32,8 +32,12 @@ namespace Rucker.Flow
             }
         }
 
+        /// <summary>
+        /// The default Enumerator created by iterator blocks is blocking. That is, only one thread can read from it at a time. There are lots of good reasons for that (see https://codeblog.jonskeet.uk/2009/10/23/iterating-atomically/)
+        /// Because we know exactly how our pipe will be called and used we can cheat a little bit to get around these shortcomings. This implementation is in no way safe for generalized use thus why I've made them private classes.
+        /// </summary>
         [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-        private class GlobalReadEnumerator : IEnumerator<T>
+        private class ThreadedEnumerator : IEnumerator<T>
         {
             [ThreadStatic]
             private static int LocalIndex;
@@ -43,7 +47,7 @@ namespace Rucker.Flow
 
             private readonly IRead<T> _reader;
 
-            public GlobalReadEnumerator(IRead<T> reader, int size)
+            public ThreadedEnumerator(IRead<T> reader, int size)
             {
                 _reader = reader;
                 
@@ -111,7 +115,7 @@ namespace Rucker.Flow
         #region Private Methods
         private static Func<IEnumerable<T>> Read(IRead<T> reader, int pageSize)
         {
-            var readEnumerable = new GlobalReadEnumerable(reader, pageSize);
+            var readEnumerable = new ThreadedEnumerable(reader, pageSize);
 
             return () => readEnumerable;
         }

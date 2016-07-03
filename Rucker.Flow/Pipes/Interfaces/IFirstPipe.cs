@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Rucker.Flow
@@ -19,6 +20,11 @@ namespace Rucker.Flow
         public static IClosedPipe Then<P1, C1>(this IFirstPipe<P1> first, ILastPipe<C1> last) where P1 : C1
         {
             return new ConcatFirstLastPipe<P1, C1>(first, last);
+        }
+
+        public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan startTime, TimeSpan cycleTime)
+        {
+            return new ConcatFirstMidPipe<P, P, P>(first, new PollPipe<P>(startTime, cycleTime));
         }
 
         public static IFirstPipe<P> Thread<P>(this IFirstPipe<P> first, int maxDegreeOfParallelism)
