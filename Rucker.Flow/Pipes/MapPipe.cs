@@ -4,6 +4,14 @@ using Rucker.Data;
 
 namespace Rucker.Flow
 {
+    public static class MapPipe
+    {
+        public static MapPipe<C, P> Infer<C, P>(params IMap<C, P>[] mappers)
+        {
+            return new MapPipe<C, P>(mappers.ToArray());
+        }
+    }
+
     public class MapPipe<C, P>: LambdaMidPipe<C, P>
     {
         public MapPipe(params IMap<C, P>[] mappers) : base(pages => Map(mappers, pages))
