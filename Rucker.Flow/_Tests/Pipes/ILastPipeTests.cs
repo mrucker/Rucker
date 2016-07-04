@@ -21,7 +21,12 @@ namespace Rucker.Flow.Tests
             if (pipeType == "LambdaPipe")
             {
                 _pipeFactory = (consumes, produces) => new LambdaLastPipe<string>(produces.AddRange) { Consumes = consumes() };
-            }            
+            }
+
+            if (_pipeFactory == null)
+            {
+                throw new ArgumentException($"Undefined pipeType ({pipeType})", nameof(pipeType));
+            }
         }
         #endregion
 

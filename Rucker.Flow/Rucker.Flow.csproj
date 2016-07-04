@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pipes\Control\PollLimit.cs" />
+    <Compile Include="Pipes\EnumerablePipe.cs" />
     <Compile Include="Pipes\MapPipe.cs" />
     <Compile Include="Pipes\ReadPipe.cs" />
     <Compile Include="Pipes\WritePipe.cs" />

@@ -8,12 +8,13 @@ using NUnit.Framework;
 
 namespace Rucker.Flow.Tests
 {
+    [TestFixture("PollPipe")]
     [TestFixture("ReadPipe")]
     [TestFixture("AsyncPipe")]
     [TestFixture("LambdaPipe")]
     [TestFixture("ThreadPipe(1)")]
-    [TestFixture("ThreadPipe(2)")] //I assume if we can do two then we can do any number. Proof by mathematical induction? :)
-    [TestFixture("PollPipe")]
+    [TestFixture("ThreadPipe(2)")] //I assume if we can do two then we can do any number. Proof by mathematical induction? :)  
+    [TestFixture("EnumerablePipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
     [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
     public class IFirstPipeTests
@@ -25,6 +26,11 @@ namespace Rucker.Flow.Tests
         #region Constructors
         public IFirstPipeTests(string pipeType)
         {
+            if (pipeType == "PollPipe")
+            {
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.Zero, new PollLimit(1));
+            }
+
             if (pipeType == "ReadPipe")
             {
                 _pipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
@@ -50,9 +56,14 @@ namespace Rucker.Flow.Tests
                 _pipeFactory = production => new LambdaFirstPipe<string>(production).Thread(2);
             }
 
-            if (pipeType == "PollPipe")
+            if (pipeType == "EnumerablePipe")
             {
-                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.Zero, new PollLimit(1));
+                _pipeFactory = production => new EnumerablePipe<string>(production());
+            }
+
+            if (_pipeFactory == null)
+            {
+                throw new ArgumentException($"Undefined pipeType ({pipeType})", nameof(pipeType));
             }
         }
         #endregion
@@ -113,11 +124,25 @@ namespace Rucker.Flow.Tests
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = _pipeFactory(OnlyError);
+            var pipe = null as IFirstPipe<string>;
+
+            try
+            {
+                pipe = _pipeFactory(OnlyError);
+            }
+            catch (Exception)
+            {
+                if (_pipeFactory(Production) is EnumerablePipe<string>)
+                {
+                    throw new IgnoreException("Because EnumerablePipe resolves the iterator block immediately the exception is thrown during the creation rather than while enumerating over the block");
+                }
+                throw;
+            }
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
-            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
+            Assert.AreEqual(PipeStatus.Errored, pipe.Status);            
+
         }
 
         [Test]

@@ -36,7 +36,12 @@ namespace Rucker.Flow.Tests
             if (pipeType == "MapPipe")
             {
                 _pipeFactory = consumes => new MapPipe<string, string>(new MapToLower()) { Consumes = consumes() }.Async();
-            }         
+            }
+
+            if (_pipeFactory == null)
+            {
+                throw new ArgumentException($"Undefined pipeType ({pipeType})", nameof(pipeType));
+            }
         }
         #endregion
 
