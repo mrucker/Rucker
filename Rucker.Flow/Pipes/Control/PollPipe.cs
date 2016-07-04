@@ -6,8 +6,7 @@ namespace Rucker.Flow
 {
     /// <summary>
     /// This pipe is unique. It is the only pipe I've built that works by consuming everything that comes before it.
-    /// Consumption was necessary in order for me to tie into the Stop request and end the infinite poll loop. 
-    /// Otherwise there would be no way for us to know the status of the pipes behind us.    
+    /// Consumption was necessary for me to stop an Infinite poll by checking the status of the previous pipe.
     /// </summary>
     internal sealed class PollPipe<T> : IFirstPipe<T>
     {
@@ -15,7 +14,7 @@ namespace Rucker.Flow
         private readonly IFirstPipe<T> _pipeToPoll;
         private readonly TimeSpan? _startTime;
         private readonly TimeSpan _cycleTime;
-        private readonly PollLimit _limit;
+        private readonly PollLimit _pollLimit;
 
         #endregion
 
@@ -25,19 +24,19 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructor
-        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan startTime, TimeSpan cycleTime, PollLimit limit)
+        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan startTime, TimeSpan cycleTime, PollLimit pollLimit)
         {
             _pipeToPoll = pipeToPoll;
             _startTime  = startTime;
             _cycleTime  = cycleTime;
-            _limit = limit;
+            _pollLimit  = pollLimit;
         }
 
-        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan cycleTime, PollLimit limit)
+        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan cycleTime, PollLimit pollLimit)
         {
             _pipeToPoll = pipeToPoll;
             _cycleTime  = cycleTime;
-            _limit = limit;
+            _pollLimit  = pollLimit;
             _startTime  = null;
         }
         #endregion
@@ -57,11 +56,12 @@ namespace Rucker.Flow
         #region Private Methods
         private IEnumerable<T> Poll()
         {
-            var pollBegin = DateTime.Now;
-            var pollTime  = DateTime.Now - pollBegin;
+            var beginTime = DateTime.Now;
+
+            var pollTime  = TimeSpan.Zero;
             var pollCount = 0;
 
-            while (_pipeToPoll.Status != PipeStatus.Stopped && _pipeToPoll.Status != PipeStatus.Errored && !_limit.Reached(pollCount, pollTime))
+            do
             {
                 Thread.Sleep(TimeTillEndOfNextCycle());
                 
@@ -71,8 +71,9 @@ namespace Rucker.Flow
                 }
 
                 pollCount++;
-                pollTime = DateTime.Now - pollBegin;
+                pollTime = DateTime.Now - beginTime;
             }
+            while (_pipeToPoll.Status != PipeStatus.Stopped && _pipeToPoll.Status != PipeStatus.Errored && !_pollLimit.Reached(pollCount, pollTime));
         }
 
         private TimeSpan TimeTillEndOfNextCycle()

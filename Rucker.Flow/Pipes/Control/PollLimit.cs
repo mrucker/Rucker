@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace Rucker.Flow
 {
@@ -47,10 +48,11 @@ namespace Rucker.Flow
             PollTime = TimeSpan.Zero;
         }
 
+        [Pure] //This is confusing to me but basically Pure just means we don't change anything (http://stackoverflow.com/q/9927434/1066291)
         public bool Reached(int pollCount, TimeSpan pollTime)
         {
             if (Equals(Forever)) return false;
-
+            
             return (pollCount >= PollCount && pollCount != 0) || (pollTime >= PollTime && PollTime != TimeSpan.Zero);
         }
     }
