@@ -12,14 +12,14 @@ namespace Rucker.Flow.Tests
     [TestFixture("AsyncPipe")]
     [TestFixture("LambdaPipe")]
     [TestFixture("ThreadPipe(1)")]
-    [TestFixture("ThreadPipe(2)")] //I assume if we can do two then we can do any number
+    [TestFixture("ThreadPipe(2)")] //I assume if we can do two then we can do any number. Proof by mathematical induction? :)
     [TestFixture("PollPipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
     [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
     public class IFirstPipeTests
     {
         #region Fields
-        private readonly Func<Func<IEnumerable<string>>, IFirstPipe<string>> _firstPipeFactory;
+        private readonly Func<Func<IEnumerable<string>>, IFirstPipe<string>> _pipeFactory;
         #endregion
 
         #region Constructors
@@ -27,32 +27,32 @@ namespace Rucker.Flow.Tests
         {
             if (pipeType == "ReadPipe")
             {
-                _firstPipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
+                _pipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
             }
 
             if (pipeType == "AsyncPipe")
             {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Async();
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Async();
             }
 
             if (pipeType == "LambdaPipe")
             {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production);
+                _pipeFactory = production => new LambdaFirstPipe<string>(production);
             }
 
             if (pipeType == "ThreadPipe(1)")
             {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(1);
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Thread(1);
             }
 
             if (pipeType == "ThreadPipe(2)")
             {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(2);
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Thread(2);
             }
 
             if (pipeType == "PollPipe")
             {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.FromMilliseconds(500));
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.FromMilliseconds(500));
             }
         }
         #endregion
@@ -60,56 +60,40 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe = _firstPipeFactory(ManyProduction());
+            var pipe = _pipeFactory(ManyProduction());
 
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
-
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));            
         }
 
         [Test]
         public void ValuesProducedTwiceTest()
         {            
-            var pipe = _firstPipeFactory(ManyProduction());
+            var pipe = _pipeFactory(ManyProduction());
 
             if (pipe is ReadPipe<string>)
             {
-                throw new IgnoreException("ReadPipe, because it was built to work with an old framework that doesn't allow infinite reads, doesn't work for this test");
-            }
+                throw new IgnoreException("Because ReadPipe was built to work with an old framework that doesn't allow infinite reads it doesn't work for this test");
+            }            
 
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));            
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
-
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));            
         }
 
         [Test]
         public void ValuesProducedOnceTest()
         {
-            var pipe = _firstPipeFactory(SingleProduction());
-
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+            var pipe = _pipeFactory(SingleProduction());            
 
             Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
 
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
-
             Assert.IsTrue(pipe.Produces.None());
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
 
         [Test]
         public void FirstErrorTest()
         {
-            var pipe = _firstPipeFactory(FirstError);
+            var pipe = _pipeFactory(FirstError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("First").Or.InnerException.Message.EqualTo("First"));
 
@@ -119,7 +103,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = _firstPipeFactory(LastError);
+            var pipe = _pipeFactory(LastError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Last").Or.InnerException.Message.EqualTo("Last"));
 
@@ -129,7 +113,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = _firstPipeFactory(OnlyError);
+            var pipe = _pipeFactory(OnlyError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
@@ -137,57 +121,81 @@ namespace Rucker.Flow.Tests
         }
 
         [Test]
-        public void WorkingStatusTest()
+        public void StopErrorTest()
         {
-            var pipe = _firstPipeFactory(SingleProduction());
+            var pipe = _pipeFactory(ManyProduction());
 
-            var prod = pipe.Produces.GetEnumerator();
+            pipe.Stop();
 
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
-
-            prod.MoveNext();
-
-            Assert.AreEqual(Production().Skip(0).First(), prod.Current);
-
-            Assert.AreEqual(PipeStatus.Working, pipe.Status);
-
-            prod.MoveNext();
-
-            Assert.AreEqual(Production().Skip(1).First(), prod.Current);
-
-            Assert.AreEqual(PipeStatus.Working, pipe.Status);
+            Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.Contain("stopped").Or.InnerException.Message.Contain("stopped"));
         }
 
         [Test]
         public void StopStatusTest()
         {
-            var pipe = _firstPipeFactory(ManyProduction());
+            var pipe = _pipeFactory(ManyProduction());
 
             var prod = pipe.Produces.GetEnumerator();
-
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
             prod.MoveNext();
 
             Assert.AreEqual(Production().First(), prod.Current);
 
-            Assert.AreEqual(PipeStatus.Working, pipe.Status);
-
             pipe.Stop();
 
-            while(prod.MoveNext()) { }
+            while (prod.MoveNext()) { }
 
             Assert.AreEqual(PipeStatus.Stopped, pipe.Status);
         }
 
         [Test]
-        public void StopExceptionTest()
+        public void CreatedStatusTest()
         {
-            var pipe = _firstPipeFactory(ManyProduction());
+            var pipe = _pipeFactory(SingleProduction());
 
-            pipe.Stop();
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+        }
 
-            Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.Contain("stopped").Or.InnerException.Message.Contain("stopped"));
+        [Test]
+        public void WorkingStatusTest()
+        {
+            var pipe = _pipeFactory(SingleProduction());
+            var prod = pipe.Produces.GetEnumerator();
+
+            prod.MoveNext();
+
+            Assert.AreEqual(PipeStatus.Working, pipe.Status);
+
+            prod.MoveNext();
+
+            Assert.AreEqual(PipeStatus.Working, pipe.Status);
+        }
+
+        [Test]
+        public void FinishedStatusTest()
+        {
+            var pipe = _pipeFactory(SingleProduction());
+            var prod = pipe.Produces.GetEnumerator();
+
+            while (prod.MoveNext()) { }
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+        }
+
+        [Test]
+        public void EveryStatusTest()
+        {
+            var pipe = _pipeFactory(SingleProduction());
+            var prod = pipe.Produces.GetEnumerator();
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+
+            while (prod.MoveNext())
+            {
+                Assert.AreEqual(PipeStatus.Working, pipe.Status);
+            }
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
 
         #region Private Methods

@@ -16,7 +16,7 @@ namespace Rucker.Flow.Tests
     public class IMidPipeTests
     {
         #region Fields
-        private readonly Func<Func<IEnumerable<string>>, IMidPipe<string, string>> _midPipeFactory;
+        private readonly Func<Func<IEnumerable<string>>, IMidPipe<string, string>> _pipeFactory;
         #endregion
 
         #region Constructors
@@ -24,18 +24,18 @@ namespace Rucker.Flow.Tests
         {
             if (pipeType == "LambdaPipe")
             {
-                _midPipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() };
+                _pipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() };
             }
 
             if (pipeType == "AsyncPipe")
             {
                 //it is the "Async" command at the end of this line that makes this an "Asynchronous" mid pipe.
-                _midPipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() }.Async();
+                _pipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() }.Async();
             }
 
             if (pipeType == "MapPipe")
             {
-                _midPipeFactory = consumes => new MapPipe<string, string>(new MapToLower()) { Consumes = consumes() }.Async();
+                _pipeFactory = consumes => new MapPipe<string, string>(new MapToLower()) { Consumes = consumes() }.Async();
             }
 
 
@@ -45,7 +45,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe = _midPipeFactory(ManyProduction());
+            var pipe = _pipeFactory(ManyProduction());
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -55,7 +55,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTwiceTest()
         {
-            var pipe = _midPipeFactory(ManyProduction());
+            var pipe = _pipeFactory(ManyProduction());
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -67,7 +67,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesEmptiedTest()
         {
-            var pipe = _midPipeFactory(SingleProduction());
+            var pipe = _pipeFactory(SingleProduction());
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -79,7 +79,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void FirstErrorTest()
         {
-            var pipe = _midPipeFactory(FirstError);
+            var pipe = _pipeFactory(FirstError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("First").Or.InnerException.Message.EqualTo("First"));
 
@@ -89,7 +89,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = _midPipeFactory(LastError);
+            var pipe = _pipeFactory(LastError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Last").Or.InnerException.Message.EqualTo("Last"));
 
@@ -99,7 +99,7 @@ namespace Rucker.Flow.Tests
         [Test, Ignore("An interesting fail case. I don't think there is anything to be done.")]
         public void OnlyErrorTest()
         {
-            var pipe = _midPipeFactory(OnlyError);
+            var pipe = _pipeFactory(OnlyError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
@@ -109,7 +109,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void CreatedStatusTest()
         {
-            var pipe = _midPipeFactory(SingleProduction());            
+            var pipe = _pipeFactory(SingleProduction());            
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
         }
@@ -117,7 +117,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void WorkingStatusTest()
         {
-            var pipe = _midPipeFactory(SingleProduction());
+            var pipe = _pipeFactory(SingleProduction());
             var prod = pipe.Produces.GetEnumerator();
 
             prod.MoveNext();
@@ -132,7 +132,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void FinishedStatusTest()
         {
-            var pipe = _midPipeFactory(SingleProduction());
+            var pipe = _pipeFactory(SingleProduction());
             var prod = pipe.Produces.GetEnumerator();
 
             while(prod.MoveNext()) { }
@@ -143,7 +143,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void EveryStatusTest()
         {
-            var pipe = _midPipeFactory(SingleProduction());
+            var pipe = _pipeFactory(SingleProduction());
             var prod = pipe.Produces.GetEnumerator();
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);

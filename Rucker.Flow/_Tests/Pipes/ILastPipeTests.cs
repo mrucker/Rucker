@@ -12,7 +12,7 @@ namespace Rucker.Flow.Tests
     public class ILastPipeTests
     {
         #region Fields
-        private readonly Func<Func<IEnumerable<string>>, List<string>, ILastPipe<string>> _lastPipeFactory;
+        private readonly Func<Func<IEnumerable<string>>, List<string>, ILastPipe<string>> _pipeFactory;
         #endregion
 
         #region Constructors
@@ -20,7 +20,7 @@ namespace Rucker.Flow.Tests
         {
             if (pipeType == "LambdaPipe")
             {
-                _lastPipeFactory = (consumes, produces) => new LambdaLastPipe<string>(produces.AddRange) { Consumes = consumes() };
+                _pipeFactory = (consumes, produces) => new LambdaLastPipe<string>(produces.AddRange) { Consumes = consumes() };
             }
         }
         #endregion
@@ -29,7 +29,7 @@ namespace Rucker.Flow.Tests
         public void ValuesWrittenTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(ManyProduction(), dest);
+            var pipe = _pipeFactory(ManyProduction(), dest);
 
             pipe.Start();
 
@@ -40,7 +40,7 @@ namespace Rucker.Flow.Tests
         public void ValuesWrittenTwiceTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(ManyProduction(), dest);
+            var pipe = _pipeFactory(ManyProduction(), dest);
 
             pipe.Start();
 
@@ -55,7 +55,7 @@ namespace Rucker.Flow.Tests
         public void ValuesEmptiedTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(SingleProduction(), dest);
+            var pipe = _pipeFactory(SingleProduction(), dest);
 
             pipe.Start();
              
@@ -70,7 +70,7 @@ namespace Rucker.Flow.Tests
         public void FirstErrorTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(FirstError, dest);
+            var pipe = _pipeFactory(FirstError, dest);
 
             Assert.That(pipe.Start, Throws.Exception.Message.EqualTo("First").Or.InnerException.Message.EqualTo("First"));
 
@@ -83,7 +83,7 @@ namespace Rucker.Flow.Tests
         public void LastErrorTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(LastError, dest);
+            var pipe = _pipeFactory(LastError, dest);
 
             Assert.That(pipe.Start, Throws.Exception.Message.EqualTo("Last").Or.InnerException.Message.EqualTo("Last"));
 
@@ -97,7 +97,7 @@ namespace Rucker.Flow.Tests
         public void OnlyErrorTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(OnlyError, dest);
+            var pipe = _pipeFactory(OnlyError, dest);
 
             Assert.That(pipe.Start, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
@@ -110,7 +110,7 @@ namespace Rucker.Flow.Tests
         public void CreatedStatusTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(SingleProduction(), dest);
+            var pipe = _pipeFactory(SingleProduction(), dest);
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
         }
@@ -119,7 +119,7 @@ namespace Rucker.Flow.Tests
         public void FinishedStatusTest()
         {
             var dest = new List<string>();
-            var pipe = _lastPipeFactory(SingleProduction(), dest);
+            var pipe = _pipeFactory(SingleProduction(), dest);
 
             pipe.Start();
 
