@@ -9,8 +9,9 @@ using NUnit.Framework;
 namespace Rucker.Flow.Tests
 {
     [TestFixture("ReadPipe")]
-    [TestFixture("AsyncPipe")]    
+    [TestFixture("AsyncPipe")]
     [TestFixture("LambdaPipe")]
+    [TestFixture("ThreadPipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
     [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
     public class IFirstPipeTests
@@ -22,19 +23,24 @@ namespace Rucker.Flow.Tests
         #region Constructors
         public IFirstPipeTests(string firstPipeType)
         {
-            if (firstPipeType == "AsyncPipe")
-            {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Async();
-            }
-
             if (firstPipeType == "ReadPipe")
             {
                 _firstPipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
             }
 
+            if (firstPipeType == "AsyncPipe")
+            {
+                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Async();
+            }
+
             if (firstPipeType == "LambdaPipe")
             {
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production);
+            }
+
+            if (firstPipeType == "ThreadPipe")
+            {
+                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(1);
             }
         }
         #endregion

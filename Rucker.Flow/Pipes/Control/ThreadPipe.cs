@@ -6,7 +6,11 @@ using Rucker.Dispose;
 using Rucker.Testing;
 
 namespace Rucker.Flow
-{    
+{        
+    /// <remarks>
+    /// The difference between ThreadedMidPipe(1) and AsyncPipe() is that ThreadedMidPipe(1) will only allow one thread to come out no matter how many threads go in.
+    /// AsyncPipe on the other hand doesn't collapse incoming threads. It will simply start a new background thread for each incoming thread.
+    /// </remarks>
     internal sealed class ThreadedMidPipe<T>: LambdaMidPipe<T, T>
     {
         #region Constructor
@@ -24,26 +28,50 @@ namespace Rucker.Flow
             {
                 if (block != null && !block.IsCompleted)
                 {
-                    return block.GetConsumingEnumerable();
+                    return YieldReturnOrException(block);
                 }
 
                 lock (@lock)
                 {
-                    if (block == null || block.IsCompleted)
+                    if (block != null && !block.IsCompleted)
                     {
-                        block = new BlockingCollection<T>();
+                        return YieldReturnOrException(block);
+                    }
 
-                        Task.Run(() =>
-                        {
-                            Parallel.ForEach(consumes, new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism }, produce => block.Add(produce));
+                    block = new BlockingCollection<T>();
+                }   
 
-                            block.CompleteAdding();
-                        });
-                    }                    
-                }
+                var task = Task.Run(() =>
+                {
+                    try
+                    {
+                        Parallel.ForEach(consumes, new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism }, produce => block.Add(produce));                                
+                    }
+                    finally
+                    {
+                        block.CompleteAdding();
+                    }
+                });
 
-                return block.GetConsumingEnumerable();
+                return YieldReturnOrException(block, task);
             };
+        }
+
+        private static IEnumerable<T> YieldReturnOrException(BlockingCollection<T> block, Task task = null)
+        {
+            foreach (var item in block.GetConsumingEnumerable())
+            {
+                yield return item;
+            }
+
+            try
+            {
+                task?.Wait();
+            }
+            catch (AggregateException ae)
+            {
+                throw ae.Flatten();
+            }
         }
         #endregion
     }
@@ -79,10 +107,7 @@ namespace Rucker.Flow
             {
                 if (Status != PipeStatus.Working)
                 {
-                    Parallel.For(0, _maxDegreeOfParallelism, i =>
-                    {
-                        Test.WriteLine("Starting Pipe"); _closedPipe.Start();
-                    });
+                    Parallel.For(0, _maxDegreeOfParallelism, i => _closedPipe.Start() );
                 }
             }
         }

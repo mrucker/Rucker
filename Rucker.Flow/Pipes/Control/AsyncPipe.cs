@@ -7,8 +7,12 @@ using Rucker.Dispose;
 namespace Rucker.Flow
 {
     /// <summary>
-    /// A pipe that consumes and produces in the background. It will only start one additional thread.    
+    /// A pipe that consumes and produces in the background. It will only start one additional thread.
     /// </summary>
+    /// <remarks>
+    /// The difference between ThreadedMidPipe(1) and AsyncPipe() is that ThreadedMidPipe(1) will only allow one thread to come out no matter how many threads go in.
+    /// AsyncPipe on the other hand doesn't collapse incoming threads. It will simply start a new background thread for each incoming thread.
+    /// </remarks>
     internal sealed class AsyncPipe<T> : Disposable, IMidPipe<T, T>
     {
         #region Properties
