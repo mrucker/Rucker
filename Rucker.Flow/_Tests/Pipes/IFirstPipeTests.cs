@@ -13,6 +13,7 @@ namespace Rucker.Flow.Tests
     [TestFixture("LambdaPipe")]
     [TestFixture("ThreadPipe(1)")]
     [TestFixture("ThreadPipe(2)")] //I assume if we can do two then we can do any number
+    [TestFixture("PollPipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
     [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
     public class IFirstPipeTests
@@ -22,31 +23,36 @@ namespace Rucker.Flow.Tests
         #endregion
 
         #region Constructors
-        public IFirstPipeTests(string firstPipeType)
+        public IFirstPipeTests(string pipeType)
         {
-            if (firstPipeType == "ReadPipe")
+            if (pipeType == "ReadPipe")
             {
                 _firstPipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
             }
 
-            if (firstPipeType == "AsyncPipe")
+            if (pipeType == "AsyncPipe")
             {
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Async();
             }
 
-            if (firstPipeType == "LambdaPipe")
+            if (pipeType == "LambdaPipe")
             {
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production);
             }
 
-            if (firstPipeType == "ThreadPipe(1)")
+            if (pipeType == "ThreadPipe(1)")
             {
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(1);
             }
 
-            if (firstPipeType == "ThreadPipe(2)")
+            if (pipeType == "ThreadPipe(2)")
             {
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(2);
+            }
+
+            if (pipeType == "PollPipe")
+            {
+                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.FromMilliseconds(500));
             }
         }
         #endregion

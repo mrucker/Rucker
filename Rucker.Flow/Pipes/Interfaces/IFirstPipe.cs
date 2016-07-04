@@ -27,6 +27,11 @@ namespace Rucker.Flow
             return new PollPipe<P>(first, startTime, cycleTime);            
         }
 
+        public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan cycleTime)
+        {
+            return new PollPipe<P>(first, cycleTime);
+        }
+
         public static IFirstPipe<P> Thread<P>(this IFirstPipe<P> first, int maxDegreeOfParallelism)
         {            
             return new ConcatFirstMidPipe<P,P,P>(first, new ThreadedMidPipe<P>(maxDegreeOfParallelism));
