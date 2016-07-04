@@ -95,7 +95,8 @@ namespace Rucker.Flow.Tests
             Assert.AreEqual(PipeStatus.Errored, pipe.Status);
         }
 
-        [Test, Ignore("An interesting fail case. I don't think there is anything to be done.")]
+        [Test]
+        [Ignore("An interesting fail case. I don't think there is anything to be done.")]
         public void OnlyErrorTest()
         {
             var dest = new List<string>();

@@ -53,8 +53,13 @@ namespace Rucker.Flow.Tests
 
         [Test]
         public void ValuesProducedTwiceTest()
-        {
+        {            
             var pipe = _firstPipeFactory(ManyProduction());
+
+            if (pipe is ReadPipe<string>)
+            {
+                throw new IgnoreException("ReadPipe, because it was built to work with an old framework that doesn't allow infinite reads, doesn't work for this test");
+            }
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
@@ -86,7 +91,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void FirstErrorTest()
         {
-            var pipe = _firstPipeFactory(ErrorFirstProduction);
+            var pipe = _firstPipeFactory(FirstError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("First").Or.InnerException.Message.EqualTo("First"));
 
@@ -96,7 +101,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = _firstPipeFactory(ErrorLastProduction);
+            var pipe = _firstPipeFactory(LastError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Last").Or.InnerException.Message.EqualTo("Last"));
 
@@ -106,7 +111,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = _firstPipeFactory(ErrorOnlyProduction);
+            var pipe = _firstPipeFactory(OnlyError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
@@ -194,7 +199,7 @@ namespace Rucker.Flow.Tests
             return () => block.GetConsumingEnumerable();
         }
         
-        private static IEnumerable<string> ErrorFirstProduction()
+        private static IEnumerable<string> FirstError()
         {
             throw new Exception("First");
             
@@ -205,14 +210,14 @@ namespace Rucker.Flow.Tests
             #pragma warning restore 162
         }
 
-        private static IEnumerable<string> ErrorLastProduction()
+        private static IEnumerable<string> LastError()
         {
             yield return "A";
             yield return "B";
             throw new Exception("Last");
         }
 
-        private static IEnumerable<string> ErrorOnlyProduction()
+        private static IEnumerable<string> OnlyError()
         {
             throw new Exception("Only");
         }
