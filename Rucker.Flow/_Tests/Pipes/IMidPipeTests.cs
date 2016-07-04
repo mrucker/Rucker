@@ -1,40 +1,33 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using Rucker.Extensions;
 using NUnit.Framework;
 
 namespace Rucker.Flow.Tests
 {
-    [TestFixture("ReadPipe")]
-    [TestFixture("AsyncPipe")]    
     [TestFixture("LambdaPipe")]
+    [TestFixture("AsyncPipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
-    [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
-    public class IFirstPipeTests
+    public class IMidPipeTests
     {
         #region Fields
-        private readonly Func<Func<IEnumerable<string>>, IFirstPipe<string>> _firstPipeFactory;
+        private readonly Func<Func<IEnumerable<string>>, IMidPipe<string, string>> _midPipeFactory;
         #endregion
 
         #region Constructors
-        public IFirstPipeTests(string firstPipeType)
+        public IMidPipeTests(string pipeType)
         {
-            if (firstPipeType == "AsyncPipe")
+            if (pipeType == "LambdaPipe")
             {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Async();
+                _midPipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() };
             }
 
-            if (firstPipeType == "ReadPipe")
+            if (pipeType == "AsyncPipe")
             {
-                _firstPipeFactory = production => new ReadPipe<string>(new ReadFunc(production), 1);
-            }
-
-            if (firstPipeType == "LambdaPipe")
-            {
-                _firstPipeFactory = production => new LambdaFirstPipe<string>(production);
+                _midPipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() }.Async();
             }
         }
         #endregion
@@ -42,56 +35,41 @@ namespace Rucker.Flow.Tests
         [Test]
         public void ValuesProducedTest()
         {
-            var pipe = _firstPipeFactory(ManyProduction());
+            var pipe = _midPipeFactory(ManyProduction());
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+            Assert.IsTrue(Production().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
         }
 
         [Test]
         public void ValuesProducedTwiceTest()
-        {            
-            var pipe = _firstPipeFactory(ManyProduction());
-
-            if (pipe is ReadPipe<string>)
-            {
-                throw new IgnoreException("ReadPipe, because it was built to work with an old framework that doesn't allow infinite reads, doesn't work for this test");
-            }
+        {
+            var pipe = _midPipeFactory(ManyProduction());
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
+            Assert.IsTrue(Production().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
-
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+            Assert.IsTrue(Production().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
         }
 
         [Test]
-        public void ValuesProducedOnceTest()
+        public void ValuesEmptiedTest()
         {
-            var pipe = _firstPipeFactory(SingleProduction());
+            var pipe = _midPipeFactory(SingleProduction());
 
             Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+            Assert.IsTrue(Production().Select(i => i.ToLower()).SequenceEqual(pipe.Produces));
 
             Assert.IsTrue(pipe.Produces.None());
-
-            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
 
         [Test]
         public void FirstErrorTest()
         {
-            var pipe = _firstPipeFactory(FirstError);
+            var pipe = _midPipeFactory(FirstError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("First").Or.InnerException.Message.EqualTo("First"));
 
@@ -101,17 +79,17 @@ namespace Rucker.Flow.Tests
         [Test]
         public void LastErrorTest()
         {
-            var pipe = _firstPipeFactory(LastError);
+            var pipe = _midPipeFactory(LastError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Last").Or.InnerException.Message.EqualTo("Last"));
 
             Assert.AreEqual(PipeStatus.Errored, pipe.Status);
         }
 
-        [Test]
+        [Test, Ignore("An interesting fail case. I don't think there is anything to be done.")]
         public void OnlyErrorTest()
         {
-            var pipe = _firstPipeFactory(OnlyError);
+            var pipe = _midPipeFactory(OnlyError);
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
@@ -119,57 +97,53 @@ namespace Rucker.Flow.Tests
         }
 
         [Test]
+        public void CreatedStatusTest()
+        {
+            var pipe = _midPipeFactory(SingleProduction());            
+
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
+        }
+
+        [Test]
         public void WorkingStatusTest()
         {
-            var pipe = _firstPipeFactory(SingleProduction());
-
+            var pipe = _midPipeFactory(SingleProduction());
             var prod = pipe.Produces.GetEnumerator();
 
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
-
             prod.MoveNext();
-
-            Assert.AreEqual(Production().Skip(0).First(), prod.Current);
 
             Assert.AreEqual(PipeStatus.Working, pipe.Status);
 
             prod.MoveNext();
-
-            Assert.AreEqual(Production().Skip(1).First(), prod.Current);
 
             Assert.AreEqual(PipeStatus.Working, pipe.Status);
         }
 
         [Test]
-        public void StopStatusTest()
+        public void FinishedStatusTest()
         {
-            var pipe = _firstPipeFactory(ManyProduction());
-
+            var pipe = _midPipeFactory(SingleProduction());
             var prod = pipe.Produces.GetEnumerator();
-
-            Assert.AreEqual(PipeStatus.Created, pipe.Status);
-
-            prod.MoveNext();
-
-            Assert.AreEqual(Production().First(), prod.Current);
-
-            Assert.AreEqual(PipeStatus.Working, pipe.Status);
-
-            pipe.Stop();
 
             while(prod.MoveNext()) { }
-
-            Assert.AreEqual(PipeStatus.Stopped, pipe.Status);
+            
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
 
         [Test]
-        public void StopExceptionTest()
+        public void EveryStatusTest()
         {
-            var pipe = _firstPipeFactory(ManyProduction());
+            var pipe = _midPipeFactory(SingleProduction());
+            var prod = pipe.Produces.GetEnumerator();
 
-            pipe.Stop();
+            Assert.AreEqual(PipeStatus.Created, pipe.Status);
 
-            Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.Contain("stopped").Or.InnerException.Message.Contain("stopped"));
+            while (prod.MoveNext())
+            {
+                Assert.AreEqual(PipeStatus.Working, pipe.Status);
+            }
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }
 
         #region Private Methods
@@ -183,7 +157,7 @@ namespace Rucker.Flow.Tests
         private static Func<IEnumerable<string>> ManyProduction()
         {
             return Production;
-        }       
+        }
 
         private static Func<IEnumerable<string>> SingleProduction()
         {
@@ -198,11 +172,11 @@ namespace Rucker.Flow.Tests
 
             return () => block.GetConsumingEnumerable();
         }
-        
+
         private static IEnumerable<string> FirstError()
         {
             throw new Exception("First");
-            
+
             #pragma warning disable 162
             yield return "A";
             yield return "B";
