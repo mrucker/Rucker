@@ -22,14 +22,14 @@ namespace Rucker.Flow
             return new ConcatFirstLastPipe<P1, C1>(first, last);
         }
 
-        public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan startTime, TimeSpan cycleTime)
+        public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan startTime, TimeSpan cycleTime, PollLimit? limit = null)
         {
-            return new PollPipe<P>(first, startTime, cycleTime);            
+            return new PollPipe<P>(first, startTime, cycleTime, limit ?? PollLimit.Forever);
         }
 
-        public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan cycleTime)
+        public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan cycleTime, PollLimit? limit = null)
         {
-            return new PollPipe<P>(first, cycleTime);
+            return new PollPipe<P>(first, cycleTime, limit ?? PollLimit.Forever);
         }
 
         public static IFirstPipe<P> Thread<P>(this IFirstPipe<P> first, int maxDegreeOfParallelism)

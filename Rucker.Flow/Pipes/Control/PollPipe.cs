@@ -15,6 +15,8 @@ namespace Rucker.Flow
         private readonly IFirstPipe<T> _pipeToPoll;
         private readonly TimeSpan? _startTime;
         private readonly TimeSpan _cycleTime;
+        private readonly PollLimit _limit;
+
         #endregion
 
         #region Properties
@@ -23,17 +25,19 @@ namespace Rucker.Flow
         #endregion
 
         #region Constructor
-        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan startTime, TimeSpan cycleTime)
+        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan startTime, TimeSpan cycleTime, PollLimit limit)
         {
             _pipeToPoll = pipeToPoll;
             _startTime  = startTime;
             _cycleTime  = cycleTime;
+            _limit = limit;
         }
 
-        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan cycleTime)
+        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan cycleTime, PollLimit limit)
         {
             _pipeToPoll = pipeToPoll;
             _cycleTime  = cycleTime;
+            _limit = limit;
             _startTime  = null;
         }
         #endregion
@@ -53,14 +57,21 @@ namespace Rucker.Flow
         #region Private Methods
         private IEnumerable<T> Poll()
         {
-            while (_pipeToPoll.Status == PipeStatus.Working)
+            var pollBegin = DateTime.Now;
+            var pollTime  = DateTime.Now - pollBegin;
+            var pollCount = 0;
+
+            while (_pipeToPoll.Status != PipeStatus.Stopped && _pipeToPoll.Status != PipeStatus.Errored && !_limit.Reached(pollCount, pollTime))
             {
                 Thread.Sleep(TimeTillEndOfNextCycle());
-
+                
                 foreach (var item in _pipeToPoll.Produces)
                 {
                     yield return item;
                 }
+
+                pollCount++;
+                pollTime = DateTime.Now - pollBegin;
             }
         }
 

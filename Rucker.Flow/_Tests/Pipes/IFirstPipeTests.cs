@@ -52,7 +52,7 @@ namespace Rucker.Flow.Tests
 
             if (pipeType == "PollPipe")
             {
-                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.FromMilliseconds(500));
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.FromMilliseconds(500), new PollLimit(1));
             }
         }
         #endregion
@@ -62,7 +62,7 @@ namespace Rucker.Flow.Tests
         {
             var pipe = _pipeFactory(ManyProduction());
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));            
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces.Take(Production().Count())));
         }
 
         [Test]
@@ -75,9 +75,9 @@ namespace Rucker.Flow.Tests
                 throw new IgnoreException("Because ReadPipe was built to work with an old framework that doesn't allow infinite reads it doesn't work for this test");
             }            
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));            
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces.Take(Production().Count())));            
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));            
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces.Take(Production().Count())));            
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace Rucker.Flow.Tests
         {
             var pipe = _pipeFactory(SingleProduction());            
 
-            Assert.IsTrue(Production().SequenceEqual(pipe.Produces));
+            Assert.IsTrue(Production().SequenceEqual(pipe.Produces.Take(Production().Count())));
 
             Assert.IsTrue(pipe.Produces.None());
         }
