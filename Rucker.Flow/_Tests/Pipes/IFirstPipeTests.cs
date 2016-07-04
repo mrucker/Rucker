@@ -141,8 +141,7 @@ namespace Rucker.Flow.Tests
 
             Assert.That(pipe.Produces.ToArray, Throws.Exception.Message.EqualTo("Only").Or.InnerException.Message.EqualTo("Only"));
 
-            Assert.AreEqual(PipeStatus.Errored, pipe.Status);            
-
+            Assert.AreEqual(PipeStatus.Errored, pipe.Status);
         }
 
         [Test]
