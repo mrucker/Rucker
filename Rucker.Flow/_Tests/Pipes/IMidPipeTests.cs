@@ -5,11 +5,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Rucker.Extensions;
 using NUnit.Framework;
+using Rucker.Flow._Tests.Classes.Mappers;
 
 namespace Rucker.Flow.Tests
 {
     [TestFixture("LambdaPipe")]
     [TestFixture("AsyncPipe")]
+    [TestFixture("MapPipe")]
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
     public class IMidPipeTests
     {
@@ -27,8 +29,16 @@ namespace Rucker.Flow.Tests
 
             if (pipeType == "AsyncPipe")
             {
+                //it is the "Async" command at the end of this line that makes this an "Asynchronous" mid pipe.
                 _midPipeFactory = consumes => new LambdaMidPipe<string, string>(items => items.Select(i => i.ToLower())) { Consumes = consumes() }.Async();
             }
+
+            if (pipeType == "MapPipe")
+            {
+                _midPipeFactory = consumes => new MapPipe<string, string>(new MapToLower()) { Consumes = consumes() }.Async();
+            }
+
+
         }
         #endregion
 
