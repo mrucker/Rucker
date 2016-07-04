@@ -71,6 +71,7 @@
     <Compile Include="Steps\SqlStep.cs" />
     <Compile Include="Pipes\LambdaPipe.cs" />
     <Compile Include="Pipes\Control\PollPipe.cs" />
+    <Compile Include="_Tests\Classes\Mappers\MapToLower.cs" />
     <Compile Include="_Tests\Classes\Readers\ReadFunc.cs" />
     <Compile Include="_Tests\Classes\Steps\FailInitializingStep.cs" />
     <Compile Include="_Tests\Classes\Steps\FailProcessingStep.cs" />

@@ -4,38 +4,73 @@ using System.Collections.Generic;
 
 namespace Rucker.Flow
 {
-    public class PollPipe<T> : LambdaMidPipe<T, T>
+    /// <summary>
+    /// This pipe is unique. It is the only pipe I've built that works by consuming everything that comes before it.
+    /// Consumption was necessary in order for me to tie into the Stop request and end the infinite poll loop. 
+    /// Otherwise there would be no way for us to know the status of the pipes behind us.    
+    /// </summary>
+    internal sealed class PollPipe<T> : IFirstPipe<T>
     {
-        public PollPipe(TimeSpan startTime, TimeSpan cycleTime) : base(consumes => Polled(consumes, startTime, cycleTime))
-        {
+        #region Fields
+        private readonly IFirstPipe<T> _pipeToPoll;
+        private readonly TimeSpan? _startTime;
+        private readonly TimeSpan _cycleTime;
+        #endregion
 
+        #region Properties
+        public PipeStatus Status => _pipeToPoll.Status;
+        public IEnumerable<T> Produces => Poll();
+        #endregion
+
+        #region Constructor
+        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan startTime, TimeSpan cycleTime)
+        {
+            _pipeToPoll = pipeToPoll;
+            _startTime  = startTime;
+            _cycleTime  = cycleTime;
         }
 
-        public PollPipe(TimeSpan cycleTime) : base((consumes) => Polled(consumes, null, cycleTime))
+        public PollPipe(IFirstPipe<T> pipeToPoll, TimeSpan cycleTime)
         {
+            _pipeToPoll = pipeToPoll;
+            _cycleTime  = cycleTime;
+            _startTime  = null;
+        }
+        #endregion
 
+        #region Public Methods
+        public void Dispose()
+        {
+            _pipeToPoll.Dispose();
         }
 
-        private static IEnumerable<T> Polled(IEnumerable<T> consumes, TimeSpan? startTime, TimeSpan cycleTime)
+        public void Stop()
         {
-            while (true)
+            _pipeToPoll.Stop();
+        }
+        #endregion        
+
+        #region Private Methods
+        private IEnumerable<T> Poll()
+        {
+            while (_pipeToPoll.Status == PipeStatus.Working)
             {
-                Thread.Sleep(TimeTillEndOfNextCycle(startTime, cycleTime));
+                Thread.Sleep(TimeTillEndOfNextCycle());
 
-                foreach (var item in consumes)
+                foreach (var item in _pipeToPoll.Produces)
                 {
                     yield return item;
-                }                
+                }
             }
         }
 
-        private static TimeSpan TimeTillEndOfNextCycle(TimeSpan? startTime, TimeSpan cycleTime)
+        private TimeSpan TimeTillEndOfNextCycle()
         {
-            if (startTime == null) return cycleTime;
-            if (cycleTime == TimeSpan.Zero) return TimeSpan.Zero;
+            if (_startTime == null) return _cycleTime;
+            if (_cycleTime == TimeSpan.Zero) return TimeSpan.Zero;
 
-            var cycleTicks = cycleTime.Ticks;
-            var startTicks = startTime.Value.Ticks;
+            var cycleTicks = _cycleTime.Ticks;
+            var startTicks = _startTime.Value.Ticks;
 
             //positive means startTime is in the future, negative means it is in the past.
             var ticksTillStart = startTicks - DateTime.Now.TimeOfDay.Ticks;
@@ -49,5 +84,6 @@ namespace Rucker.Flow
             //if ticksToNextCycle is less than a second then wait until the cycle after next otherwise just wait until the next cycle
             return (ticksToNextCycle < TimeSpan.TicksPerSecond / 3) ? TimeSpan.FromTicks(cycleTicks + ticksToNextCycle) : TimeSpan.FromTicks(ticksToNextCycle);
         }
+        #endregion
     }
 }

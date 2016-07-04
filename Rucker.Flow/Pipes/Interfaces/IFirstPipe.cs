@@ -24,7 +24,7 @@ namespace Rucker.Flow
 
         public static IFirstPipe<P> Poll<P>(this IFirstPipe<P> first, TimeSpan startTime, TimeSpan cycleTime)
         {
-            return new ConcatFirstMidPipe<P, P, P>(first, new PollPipe<P>(startTime, cycleTime));
+            return new PollPipe<P>(first, startTime, cycleTime);            
         }
 
         public static IFirstPipe<P> Thread<P>(this IFirstPipe<P> first, int maxDegreeOfParallelism)
