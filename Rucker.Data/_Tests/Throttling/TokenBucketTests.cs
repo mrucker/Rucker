@@ -11,6 +11,9 @@ namespace Rucker.Tests
         [TestCase(20, 100, 1)]
         [TestCase(10, 100, 2)]
         [TestCase(20, 100, 2)]
+        //This test fails occasionally depending on concurrency and resource issues on the running machine. Run the test again in case of a fail and see if it passes.
+        //Despite the inconsistency in the test outcome I still have found it useful for code coverage purposes. 
+        //95% of the time the test gives a valid pass so if it fails three times in a row there is probably a real problem.
         public void TokenBucketThrottlesAppropriately(int tokenRequests, int tokenMilliseconds, int threadCount)
         {
             using (var tokenBucket = new TokenBucket(3, 1, TimeSpan.FromMilliseconds(tokenMilliseconds)))

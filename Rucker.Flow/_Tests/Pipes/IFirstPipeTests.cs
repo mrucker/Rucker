@@ -11,7 +11,8 @@ namespace Rucker.Flow.Tests
     [TestFixture("ReadPipe")]
     [TestFixture("AsyncPipe")]
     [TestFixture("LambdaPipe")]
-    [TestFixture("ThreadPipe")]
+    [TestFixture("ThreadPipe(1)")]
+    [TestFixture("ThreadPipe(2)")] //I assume if we can do two then we can do any number
     [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]    
     [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
     public class IFirstPipeTests
@@ -38,9 +39,14 @@ namespace Rucker.Flow.Tests
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production);
             }
 
-            if (firstPipeType == "ThreadPipe")
+            if (firstPipeType == "ThreadPipe(1)")
             {
                 _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(1);
+            }
+
+            if (firstPipeType == "ThreadPipe(2)")
+            {
+                _firstPipeFactory = production => new LambdaFirstPipe<string>(production).Thread(2);
             }
         }
         #endregion
