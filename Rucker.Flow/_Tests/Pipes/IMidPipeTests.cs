@@ -36,9 +36,7 @@ namespace Rucker.Flow.Tests
             if (pipeType == "MapPipe")
             {
                 _pipeFactory = consumes => new MapPipe<string, string>(new MapToLower()) { Consumes = consumes() }.Async();
-            }
-
-
+            }         
         }
         #endregion
 

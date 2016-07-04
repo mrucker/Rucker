@@ -21,7 +21,7 @@ namespace Rucker.Flow.Tests
             if (pipeType == "LambdaPipe")
             {
                 _pipeFactory = (consumes, produces) => new LambdaLastPipe<string>(produces.AddRange) { Consumes = consumes() };
-            }
+            }            
         }
         #endregion
 
@@ -89,7 +89,7 @@ namespace Rucker.Flow.Tests
 
             Assert.AreEqual(PipeStatus.Errored, pipe.Status);
 
-            Assert.IsTrue(Production().SequenceEqual(dest));
+            Assert.IsTrue(Production().Take(2).SequenceEqual(dest));
         }
 
         [Test]
