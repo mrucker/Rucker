@@ -63,6 +63,7 @@
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\IntExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Hash\Hash.cs" />
     <Compile Include="Security\Confirm.cs" />
     <Compile Include="Security\Password.cs" />
     <Compile Include="Security\PasswordPolicy.cs" />

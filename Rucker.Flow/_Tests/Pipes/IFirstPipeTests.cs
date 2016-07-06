@@ -28,7 +28,7 @@ namespace Rucker.Flow.Tests
         {
             if (pipeType == "PollPipe")
             {
-                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.Zero, new PollLimit(1));
+                _pipeFactory = production => new LambdaFirstPipe<string>(production).Poll(TimeSpan.Zero, new PollLimit {PollCount = 1});
             }
 
             if (pipeType == "ReadPipe")

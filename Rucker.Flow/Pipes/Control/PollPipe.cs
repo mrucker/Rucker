@@ -73,7 +73,7 @@ namespace Rucker.Flow
                 pollCount++;
                 pollTime = DateTime.Now - beginTime;
             }
-            while (_pipeToPoll.Status != PipeStatus.Stopped && _pipeToPoll.Status != PipeStatus.Errored && !_pollLimit.Reached(pollCount, pollTime));
+            while (_pipeToPoll.Status != PipeStatus.Stopped && _pipeToPoll.Status != PipeStatus.Errored && !_pollLimit.Reached(pollCount, pollTime, DateTime.Now));
         }
 
         private TimeSpan TimeTillEndOfNextCycle()

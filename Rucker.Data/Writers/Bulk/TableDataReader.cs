@@ -74,7 +74,6 @@ namespace Rucker.Data
 
             base.Dispose(disposing);
         }
-
         #endregion
     }
 }

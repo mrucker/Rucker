@@ -1,4 +1,7 @@
-﻿namespace Rucker.Flow
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Rucker.Flow
 {
     public interface IClosedPipe: IPipe
     {
@@ -13,9 +16,12 @@
             return new ThreadedClosedPipe(closed, maxDegreeOfParallelism);
         }
 
-        public static IClosedPipe Async(this IClosedPipe closed)
+        public static void AsyncStart(this IClosedPipe closed)
         {
-            return new AsyncClosedPipe(closed);
+            if (closed.Status != PipeStatus.Working)
+            {
+                Task.Run((Action)closed.Start);
+            }
         }
     }
 }
