@@ -33,7 +33,7 @@ namespace Rucker.Flow
 
         #region Private Methods
         /// <summary>
-        /// Terrifying but necessary to handle exceptions correctly taken from here (http://stackoverflow.com/a/12060223/1066291)
+        /// Terrifying but necessary to handle exceptions correctly. Taken from here (http://stackoverflow.com/a/12060223/1066291)
         /// </summary>
         private IEnumerable<P> Produce(Func<IEnumerable<P>> produce)
         {
@@ -41,35 +41,46 @@ namespace Rucker.Flow
             
             Status = PipeStatus.Working;
 
-            IEnumerator<P> enumerator = null;
-
-            while (true)
+            try
             {
-                P ret;
-                try
-                {
-                    enumerator = enumerator ?? produce().GetEnumerator();
+                IEnumerator<P> enumerator = null;
 
-                    if (!enumerator.MoveNext())
+                while (true)
+                {
+                    P ret;
+                    try
                     {
-                        Status = PipeStatus.Finished;
-                        break;
+                        enumerator = enumerator ?? produce().GetEnumerator();
+
+                        if (!enumerator.MoveNext())
+                        {
+                            Status = PipeStatus.Finished;
+                            break;
+                        }
+
+                        if (_stop)
+                        {
+                            Status = PipeStatus.Stopped;
+                            break;
+                        }
+                        ret = enumerator.Current;
+                    }
+                    catch (Exception)
+                    {
+                        Status = PipeStatus.Errored;
+                        throw;
                     }
 
-                    if (_stop)
-                    {
-                        Status = PipeStatus.Stopped;
-                        break;
-                    }
-                    ret = enumerator.Current;
+                    yield return ret;
                 }
-                catch (Exception)
+            }
+            finally
+            {
+                //this handles the case where a coller disposes the enumerator
+                if (Status != PipeStatus.Errored && Status != PipeStatus.Stopped)
                 {
-                    Status = PipeStatus.Errored;
-                    throw;
+                    Status = PipeStatus.Finished;
                 }
-                
-                yield return ret;
             }
         }        
         #endregion
@@ -102,30 +113,41 @@ namespace Rucker.Flow
         {
             Status = PipeStatus.Working;
 
-            IEnumerator<P> enumerator = null;
-
-            while (true)
+            try
             {
-                P ret;
-                try
-                {
-                    enumerator = enumerator ?? _lambda(Consumes).GetEnumerator();
+                IEnumerator<P> enumerator = null;
 
-                    if (!enumerator.MoveNext())
+                while (true)
+                {
+                    P ret;
+                    try
                     {
-                        Status = PipeStatus.Finished;
-                        break;
+                        enumerator = enumerator ?? _lambda(Consumes).GetEnumerator();
+
+                        if (!enumerator.MoveNext())
+                        {
+                            Status = PipeStatus.Finished;
+                            break;
+                        }
+
+                        ret = enumerator.Current;
+                    }
+                    catch (Exception)
+                    {
+                        Status = PipeStatus.Errored;
+                        throw;
                     }
 
-                    ret = enumerator.Current;
+                    yield return ret;
                 }
-                catch (Exception)
+            }
+            finally
+            {
+                //this handles the case where a coller disposes the enumerator
+                if (Status != PipeStatus.Errored && Status != PipeStatus.Stopped)
                 {
-                    Status = PipeStatus.Errored;
-                    throw;
+                    Status = PipeStatus.Finished;
                 }
-
-                yield return ret;
             }
         }
         #endregion

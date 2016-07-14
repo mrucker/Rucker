@@ -31,7 +31,7 @@ namespace Rucker.Flow
                 try
                 {
                     foreach (var produce in Consumes)
-                    {
+                    {                       
                         block.Add(produce);
                     }
                 }
@@ -43,20 +43,29 @@ namespace Rucker.Flow
 
             Status = PipeStatus.Working;
 
-            foreach (var item in block.GetConsumingEnumerable())
-            {
-                yield return item;
-            }
-
             try
             {
-                task.Wait();
-                Status = PipeStatus.Finished;
+                foreach (var item in block.GetConsumingEnumerable())
+                {
+                    yield return item;
+                }
+
+                try
+                {
+                    task.Wait();
+                    Status = PipeStatus.Finished;
+                }
+                catch (Exception)
+                {
+                    Status = PipeStatus.Errored;
+                    throw;
+                }
             }
-            catch(Exception)
+            finally
             {
-                Status = PipeStatus.Errored;
-                throw;
+                Status = PipeStatus.Finished;
+                block.CompleteAdding();
+                try { task.Wait(); } catch { /* Because we completed adding before the async pipe was done it's going to blow */ }
             }
         }
         #endregion

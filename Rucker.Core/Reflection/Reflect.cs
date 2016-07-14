@@ -10,22 +10,22 @@ using Rucker.Convert;
 namespace Rucker.Reflection
 {
     public static class Reflect<T>
-    {        
-        public static string DisplayName<TReturn>(Expression<Func<T, TReturn>> expression)
+    {
+        public static string Display<TReturn>(Expression<Func<T, TReturn>> expression)
         {
-            return Reflect.DisplayName(PropertyInfo(expression));
+            return Reflect.Display(PropertyInfo(expression));
         }
 
-        public static string DisplayName(string property)
+        public static string Display(string property)
         {
-            return Reflect.DisplayName(typeof(T), property);
+            return Reflect.Display(typeof(T), property);
         }
 
-        public static string DisplayNameSafe<TReturn>(Expression<Func<T, TReturn>> expression)
+        public static string DisplayOrDefault<TReturn>(Expression<Func<T, TReturn>> expression)
         {
             try
             {
-                return DisplayName(expression);
+                return Display(expression);
             }
             catch
             {
@@ -33,11 +33,11 @@ namespace Rucker.Reflection
             }
         }
 
-        public static string DisplayNameSafe(string property)
+        public static string DisplayOrDefault(string property)
         {
             try
             {
-                return DisplayName(property);
+                return Display(property);
             }
             catch
             {
@@ -61,7 +61,7 @@ namespace Rucker.Reflection
 
     public static class Reflect
     {
-        public static object TryValue(object obj, string property)
+        public static object ValueOrNull(object obj, string property)
         {
             return obj?.GetType().GetProperty(property)?.GetValue(obj);
         }
@@ -71,17 +71,17 @@ namespace Rucker.Reflection
             return obj.GetType().GetProperty(property).GetValue(obj);
         }
 
-        public static string DisplayName(object obj, string property)
+        public static string Display(object obj, string property)
         {
-            return DisplayName(obj.GetType(), property);            
+            return Display(obj.GetType(), property);            
         }
 
-        public static string DisplayName(Type type, string property)
+        public static string Display(Type type, string property)
         {
-            return DisplayName(type.GetProperty(property));
+            return Display(type.GetProperty(property));
         }
 
-        public static string DisplayName(PropertyInfo propertyInfo)
+        public static string Display(PropertyInfo propertyInfo)
         {
             return propertyInfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().SingleOrDefault()?.Name
                 ?? propertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), true).Cast<DisplayNameAttribute>().SingleOrDefault()?.DisplayName;

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Rucker.Dispose;
-using Rucker.Testing;
 
 namespace Rucker.Flow
 {        
@@ -45,10 +44,20 @@ namespace Rucker.Flow
                 {
                     try
                     {
-                        Parallel.ForEach(consumes, new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism }, produce => block.Add(produce));                                
+                        if (maxDegreeOfParallelism == 1)
+                        {
+                            foreach (var item in consumes) { block.Add(item); }
+                        }
+                        else
+                        {
+                            //For some strange reason this doesn't always get the return of our consumes enumerator. I have no idea why. 
+                            //I've only tested in single thread mode, so I don't know if the same issue exists in a multi-thread environment.
+                            //To fix I added the above single thread implementation in the cases when maxDegreeOfParallelism is equal to 1.
+                            Parallel.ForEach(consumes, new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism }, item => { block.Add(item); });
+                        }
                     }
                     finally
-                    {
+                    {                        
                         block.CompleteAdding();
                     }
                 });
@@ -63,7 +72,7 @@ namespace Rucker.Flow
             {
                 yield return item;
             }
-
+            
             try
             {
                 task?.Wait();

@@ -144,6 +144,32 @@ namespace Rucker.Flow.Tests
         }
 
         [Test]
+        public void BreakFinishedTest()
+        {
+            var pipe = _pipeFactory(SingleProduction());
+
+            foreach (var produce in pipe.Produces)
+            {
+                break;
+            }
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+        }
+
+        [Test]
+        public void DisposeFinishedTest()
+        {
+            var pipe = _pipeFactory(SingleProduction());
+            var prod = pipe.Produces.GetEnumerator();
+
+            prod.MoveNext();
+
+            prod.Dispose();
+
+            Assert.AreEqual(PipeStatus.Finished, pipe.Status);
+        }
+
+        [Test]
         public void EveryStatusTest()
         {
             var pipe = _pipeFactory(SingleProduction());
