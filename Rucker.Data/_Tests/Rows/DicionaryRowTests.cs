@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Rucker.Data;
 using Rucker.Testing;
 using NUnit.Framework;
 
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     public class DicionaryRowTests
     {

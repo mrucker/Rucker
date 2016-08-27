@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Data;
 using Rucker.Convert;
+using Rucker.Testing;
 using NUnit.Framework;
 
 
-
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     [TestFixture]
     [SuppressMessage("ReSharper", "RedundantToStringCall")]
@@ -93,7 +92,7 @@ namespace Rucker.Tests
 
             var alphabets = Enumerable.Range(0, tenThousand).Select(i => new Alphabet()).ToArray();
 
-            var executionTime = Testing.Test.ExecutionTime(() => BaseRows.ObjectsToRows(alphabets).ToArray());
+            var executionTime = Test.ExecutionTime(() => BaseRows.ObjectsToRows(alphabets).ToArray());
 
             double actualMillisecondsPerRow = executionTime.TotalMilliseconds / tenThousand;
             const double slowestTimeAllowed = .05;
@@ -112,7 +111,7 @@ namespace Rucker.Tests
 
             var alphabetRows = Enumerable.Range(0, tenThousand).Select(i => new ObjectRow(new { N = 1, D = 1.23, L = 'A', W = "Ant", B = true })).ToArray();
 
-            var executionTime = Testing.Test.ExecutionTime(() => BaseRows.RowsToObjects<TestObject>(alphabetRows).ToArray());
+            var executionTime = Test.ExecutionTime(() => BaseRows.RowsToObjects<TestObject>(alphabetRows).ToArray());
 
             double actualMillisecondsPerRow = executionTime.TotalMilliseconds / tenThousand;
             const double slowestTimeAllowed = .05;
@@ -131,7 +130,7 @@ namespace Rucker.Tests
 
             var dataTable = Enumerable.Range(0, tenThousand).Select(i => new Alphabet()).ToDataTable();
 
-            var executionTime = Testing.Test.ExecutionTime(() => BaseRows.DataTableToRows(dataTable).ToArray());
+            var executionTime = Test.ExecutionTime(() => BaseRows.DataTableToRows(dataTable).ToArray());
 
             double actualMillisecondPerRow  = executionTime.TotalMilliseconds / tenThousand;
             const double slowestTimeAllowed = .2;            
@@ -153,7 +152,7 @@ namespace Rucker.Tests
             var alphabets     = Enumerable.Range(0, tenThousand).Select(i => new Alphabet()).ToArray();
             var alphabetJsons = alphabets.Select(BaseRow.ObjectToRow).Select(BaseRow.RowToJson).ToArray();
 
-            var executionTime = Testing.Test.ExecutionTime(() => BaseRows.JsonsToRows(alphabetJsons).ToArray());
+            var executionTime = Test.ExecutionTime(() => BaseRows.JsonsToRows(alphabetJsons).ToArray());
 
             double actualMillisecondsPerRow = executionTime.TotalMilliseconds / tenThousand;
             const double slowestTimeAllowed = .2;
@@ -174,9 +173,9 @@ namespace Rucker.Tests
 
             var tenThousandRows = Enumerable.Range(0, tenThousand).Select(i => new ObjectRow(new { Number1Column = i, Number2Column = i, Number3Column = i }));
 
-            var notGroupedMemory = Testing.Test.ExecutionBits(() => tenThousandRows.ToArray());
-            var groupedMemory    = Testing.Test.ExecutionBits(() => tenThousandRows.GroupBy(r => r.WithColumns(keyColumns)).ToArray());
-            var dictionaryMemory = Testing.Test.ExecutionBits(() => tenThousandRows.GroupBy(r => r.WithColumns(keyColumns)).ToDictionary(g => g.Key, g => g.Single()["Number3Column"].To<int>()));
+            var notGroupedMemory = Test.ExecutionBits(() => tenThousandRows.ToArray());
+            var groupedMemory    = Test.ExecutionBits(() => tenThousandRows.GroupBy(r => r.WithColumns(keyColumns)).ToArray());
+            var dictionaryMemory = Test.ExecutionBits(() => tenThousandRows.GroupBy(r => r.WithColumns(keyColumns)).ToDictionary(g => g.Key, g => g.Single()["Number3Column"].To<int>()));
 
             var groupedMultiplier    = Math.Round(groupedMemory/notGroupedMemory, 2);
             var dictionaryMultiplier = Math.Round(dictionaryMemory/notGroupedMemory, 2);
@@ -212,7 +211,7 @@ namespace Rucker.Tests
 
             var rows = Enumerable.Range(0, rowCount).Select(i => new ObjectRow(new Alphabet { A = $"{ i % modulus}" })).ToArray();
 
-            var executionTime = Testing.Test.ExecutionTime(() => { rows.WithDistinct(new[] { "A" }); });
+            var executionTime = Test.ExecutionTime(() => { rows.WithDistinct(new[] { "A" }); });
 
             var actualMillisecondsPerRow = executionTime.TotalMilliseconds / rowCount;
             var expectedMillisecondsPerRow = 0.05;
@@ -231,7 +230,7 @@ namespace Rucker.Tests
 
             var rows = Enumerable.Range(0, rowCount).Select(i => new ObjectRow(new Alphabet { A = $"{ i % modulus}" })).ToArray();
 
-            var executionTime = Testing.Test.ExecutionTime(() => { rows.WithDistinct(new[] { "A" }); });
+            var executionTime = Test.ExecutionTime(() => { rows.WithDistinct(new[] { "A" }); });
 
             var actualMillisecondsPerRow = executionTime.TotalMilliseconds / rowCount;
             var expectedMillisecondsPerRow = 0.05;
@@ -251,7 +250,7 @@ namespace Rucker.Tests
 
             var rows = Enumerable.Range(0, rowCount).Select(i => new ObjectRow(new Alphabet { A = $"{ i % modulus}" })).ToArray();
 
-            var executionTime = Testing.Test.ExecutionTime(() => { rows.WithDistinct(new[] { "A" }); });
+            var executionTime = Test.ExecutionTime(() => { rows.WithDistinct(new[] { "A" }); });
 
             var actualMillisecondsPerRow = executionTime.TotalMilliseconds / rowCount;
             var expectedMillisecondsPerRow = 0.05;

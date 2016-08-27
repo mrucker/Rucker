@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Data;
+using Rucker.Testing;
 using Rucker.Extensions;
 using NUnit.Framework;
 
 
-namespace Rucker.Tests
+
+namespace Rucker.Data.Tests
 {
     [TestFixture(typeof(DictionaryRow))]
     [TestFixture(typeof(ObjectRow))]

@@ -1,4 +1,6 @@
-﻿namespace Rucker.Data
+﻿using Rucker.Data;
+
+namespace Rucker.Entities
 {
     public class DbQuerier: IQuerier
     {
@@ -9,6 +11,8 @@
         #region Properties
         public string Server => QuerierUtility.Server(_nameOrConnectionString);
         public string Database => QuerierUtility.Database(_nameOrConnectionString);
+
+        public bool Persistent { get; set; }
         #endregion
 
         #region Constructors
@@ -27,7 +31,7 @@
         #region Public Methods
         public DbQuerierConnection BeginConnection()
         {
-            return new DbQuerierConnection(_nameOrConnectionString);
+            return new DbQuerierConnection(_nameOrConnectionString, Persistent);
         }
 
         IQuerierConnection IQuerier.BeginConnection()

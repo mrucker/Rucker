@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
+using Rucker.Data;
 using Rucker.Dispose;
 
-namespace Rucker.Data
+namespace Rucker.Sql
 {
     public class ReadUri: Disposable, IRead<IRows>
     {
@@ -68,7 +69,7 @@ namespace Rucker.Data
 
             if (extension == ".csv")
             {
-                return new ReadCsvFile(fileUri.FilePath);
+                return new ReadCsv(fileUri.FilePath);
             }
 
             throw new UriFormatException("The file extension (" + extension + ") isn't recognized by ReadUri.");
@@ -76,10 +77,12 @@ namespace Rucker.Data
 
         private static IRead<IRows> GetTableUriReader(BaseUri uri)
         {
-            var tableUri   = uri as TableUri ?? new TableUri(uri.ToString());
-            var tableQuery = $"SELECT * FROM {tableUri.SchemaName}.{tableUri.TableName}";
+            //var tableUri   = uri as TableUri ?? new TableUri(uri.ToString());
+            //var tableQuery = $"SELECT * FROM {tableUri.SchemaName}.{tableUri.TableName}";
 
-            return new ReadSqlServerPre2012(tableUri.DatabaseUri.ToSqlQuerier(), tableQuery);
+            //return new ReadSqlServerPre2012(tableUri.DatabaseUri.ToSqlQuerier(), tableQuery);
+
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Data;
 using Rucker.Testing;
 using NUnit.Framework;
 
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     [SuppressMessage("ReSharper", "UnusedVariable")]
     public class ObjectRowTests
@@ -79,7 +78,7 @@ namespace Rucker.Tests
 
             var alphabets = Enumerable.Range(0, tenThousand).Select(i => new Alphabet()).ToList();
 
-            var executionTime = Testing.Test.ExecutionTime(() =>
+            var executionTime = Test.ExecutionTime(() =>
             {
                 foreach (var alphabet in alphabets)
                 {
@@ -110,7 +109,7 @@ namespace Rucker.Tests
 
             var row = new ObjectRow(new Alphabet());
 
-            var executionTime = Testing.Test.ExecutionTime(() => { for (var i = 0; i < tenThousand; i++) { var a = row["A"]; } });
+            var executionTime = Test.ExecutionTime(() => { for (var i = 0; i < tenThousand; i++) { var a = row["A"]; } });
 
             var actualMillisecondsPerRow = executionTime.TotalMilliseconds / tenThousand;
             var expectedMillisecondsPerRow = 0.05;
@@ -132,7 +131,7 @@ namespace Rucker.Tests
 
             var row = new ObjectRow(new Alphabet());
 
-            var executionTime = Testing.Test.ExecutionTime(() => { for (var i = 0; i < tenThousand; i++) { row["A"] = "A"; } });
+            var executionTime = Test.ExecutionTime(() => { for (var i = 0; i < tenThousand; i++) { row["A"] = "A"; } });
 
             var actualMillisecondsPerRow = executionTime.TotalMilliseconds / tenThousand;
             var expectedMillisecondsPerRow = 0.05;

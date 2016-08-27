@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using Rucker.Data;
 
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     [TestFixture]
     public class UriTests

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
-using Rucker.Data;
 using Rucker.Testing;
 using Rucker.Extensions;
+using Rucker.Data.Testing;
 using NUnit.Framework;
 
-namespace Rucker.Tests
-{    
-    [TestFixture]
-    public class IQuerierTests
+
+namespace Rucker.Data.Tests
+{
+    public abstract class IQuerierTests
     {
         #region Fields
         private readonly IQuerier _querier;
@@ -17,15 +17,11 @@ namespace Rucker.Tests
         #region Private Class
         private class TestTable : TestDbTable
         {
-            public TestTable(params object[] objects) : base("(Id INT NOT NULL IDENTITY, A VARCHAR(10) NULL, B VARCHAR(10) NULL, X INT)", objects)
+            public TestTable(IQuerierConnection connection, params object[] rows) : base("(Id INT NOT NULL IDENTITY, A VARCHAR(10) NULL, B VARCHAR(10) NULL, X INT)", connection, rows)
             { }
         }
         #endregion
-
-        public IQuerierTests(): this(new SqlQuerier(Test.ConnectionString))
-        { }
-
-        public IQuerierTests(IQuerier querier)
+        protected IQuerierTests(IQuerier querier)
         {            
             _querier = querier;
         }
@@ -107,8 +103,8 @@ namespace Rucker.Tests
         [Test]
         public void SelectTopZeroAsRows()
         {
-            using (var testTable  = new TestTable())
             using (var connection = _querier.BeginConnection())
+            using (var testTable  = new TestTable(connection))
             {
                 Assert.IsTrue(connection.SqlQuery($"SELECT TOP 0 * FROM {testTable.TableUri.TableName}").None());
             }
@@ -117,8 +113,8 @@ namespace Rucker.Tests
         [Test]
         public void SelectTopOneAsRows()
         {
-            using (var testTable = new TestTable(new {X = 1, B = "a"}))
             using (var connection = _querier.BeginConnection())
+            using (var testTable  = new TestTable(connection, new { X = 1, B = "a" }))
             {
                 var row = connection.SqlQuery($"SELECT TOP 1 * FROM {testTable.TableUri.TableName}").Single();
 
@@ -130,8 +126,8 @@ namespace Rucker.Tests
         [Test]
         public void SelectTopTwoAsRows()
         {
-            using (var testTable = new TestTable(new { X = 1, B = "a" }, new {X = 3, B = "c"}))
             using (var connection = _querier.BeginConnection())
+            using (var testTable  = new TestTable(connection, new { X = 1, B = "a" }, new { X = 3, B = "c" }))
             {
                 var rows = connection.SqlQuery($"SELECT TOP 2 * FROM {testTable.TableUri.TableName}");
 
@@ -160,8 +156,8 @@ namespace Rucker.Tests
         [Test]
         public void SelectOneColumnFromTopTwoRows()
         {
-            using (var table = new TestTable(new {X = 1}, new {X = 3}, new {X = 5}))
             using (var connection = _querier.BeginConnection())
+            using (var table      = new TestTable(connection, new { X = 1 }, new { X = 3 }, new { X = 5 }))
             {
                 var rows = connection.SqlQuery($"SELECT TOP 2 X FROM {table.TableUri.SchemaName}.{table.TableUri.TableName}");
 
@@ -187,8 +183,8 @@ namespace Rucker.Tests
         [Test]
         public void CheckThatTableExists()
         {
-            using (var table = new TestTable())
             using (var connection = _querier.BeginConnection())
+            using (var table      = new TestTable(connection))
             {
                 connection.TableExists(table.TableUri.SchemaName, table.TableUri.TableName);
             }
@@ -206,8 +202,8 @@ namespace Rucker.Tests
         [Test]
         public void CheckThatColumnsExist()
         {
-            using (var table = new TestTable())
             using (var connection = _querier.BeginConnection())
+            using (var table = new TestTable(connection))
             {
                 connection.ColumnsExist(table.TableUri.SchemaName, table.TableUri.TableName, "Id", "B", "X");
             }
@@ -216,8 +212,8 @@ namespace Rucker.Tests
         [Test]        
         public void CheckThatFakeColumnsNotExist()
         {
-            using (var table = new TestTable())
             using (var connection = _querier.BeginConnection())
+            using (var table = new TestTable(connection))
             {
                 Assert.Throws(Is.TypeOf<Exception>().And.Message.EqualTo($"Columns (FakeId) weren't found on table {table.TableUri.ToFullyQualifiedTableName()}"), () => connection.ColumnsExist("dbo", table.TableUri.TableName, "FakeId"));
             }

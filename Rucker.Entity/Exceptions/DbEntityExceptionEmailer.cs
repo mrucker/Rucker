@@ -4,9 +4,10 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using Rucker.Email;
+using Rucker.Exceptions;
 using Rucker.Extensions;
 
-namespace Rucker.Exceptions
+namespace Rucker.Entities
 {
     public class DbEntityValidationExceptionEmailer: IExceptionEmailer
     {

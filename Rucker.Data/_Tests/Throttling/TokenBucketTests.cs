@@ -1,8 +1,8 @@
 ﻿using System;
-using Rucker.Data;
 using NUnit.Framework;
+using Rucker.Testing;
 
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     [TestFixture]
     public class TokenBucketTests
@@ -20,7 +20,7 @@ namespace Rucker.Tests
             {
                 tokenBucket.Start();
 
-                var actualExecutionTime   = Testing.Test.ExecutionTime(threadCount, tokenRequests, () => tokenBucket.RequestTokens(1) );
+                var actualExecutionTime   = Test.ExecutionTime(threadCount, tokenRequests, () => tokenBucket.RequestTokens(1) );
                 var expectedExecutionTime = TimeSpan.FromMilliseconds(tokenRequests * tokenMilliseconds);
 
                 tokenBucket.Stop();
@@ -38,7 +38,7 @@ namespace Rucker.Tests
             {
                 tokenBucket.Start();
 
-                var actualExecutionTime = Testing.Test.ExecutionTime(threadCount, tokenRequests, () => tokenBucket.RequestTokens(1));
+                var actualExecutionTime = Test.ExecutionTime(threadCount, tokenRequests, () => tokenBucket.RequestTokens(1));
                 var expectedExecutionTime = TimeSpan.FromMilliseconds(tokenRequests * tokenMilliseconds);
 
                 tokenBucket.Stop();
