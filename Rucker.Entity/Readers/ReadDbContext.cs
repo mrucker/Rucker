@@ -2,9 +2,10 @@ using System;
 using System.Linq;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using Rucker.Dispose;
+using Rucker.Data;
+using Rucker.Core;
 
-namespace Rucker.Data
+namespace Rucker.Entities
 {
     public class ReadDbContext: Disposable, IRead<IRows>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

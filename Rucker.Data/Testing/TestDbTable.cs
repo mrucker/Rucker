@@ -1,14 +1,12 @@
 ﻿using System.Linq;
-using Rucker.Data;
-using Rucker.Dispose;
-using Rucker.Extensions;
+using Rucker.Core;
 
-namespace Rucker.Testing
+namespace Rucker.Data.Testing
 {
     public class TestDbTable : Disposable
     {
         #region Fields
-        private readonly SqlQuerierConnection _connection;
+        private readonly IQuerierConnection _connection;
         #endregion
 
         #region Properties
@@ -16,14 +14,14 @@ namespace Rucker.Testing
         #endregion
 
         #region Constructors
-        public TestDbTable(string definition, params object[] objects)
+        public TestDbTable(string definition, IQuerierConnection connection, params object[] rows)
         {
-            _connection = new SqlQuerierConnection(Test.ConnectionString);
+            _connection = connection;
             
             TableUri = new TableUri($"table://{_connection.Server}/{_connection.Database}/##test_{System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(this)}");
 
             Create(definition);
-            Insert(objects);
+            Insert(rows);
         }
         #endregion
 

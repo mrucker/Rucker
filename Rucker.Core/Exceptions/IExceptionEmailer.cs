@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rucker.Exceptions
+namespace Rucker.Core
 {
     public interface IExceptionEmailer
     {

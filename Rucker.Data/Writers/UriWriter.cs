@@ -20,9 +20,9 @@ namespace Rucker.Data
         {
             if (destUri.Scheme.ToLower() == "table")
             {
-                var tableUri = (TableUri)destUri;
-
-                return new WriteConvert<IRows, IBulk>(new WriteBulk(tableUri.DatabaseUri.ToSqlQuerier(), timeout), rows => new Bulk(tableUri.TableName, rows));
+                throw new NotImplementedException();
+                //var tableUri = (TableUri)destUri;
+                //return new WriteConvert<IRows, IBulk>(new WriteBulk(tableUri.DatabaseUri.ToSqlQuerier(), timeout), rows => new Bulk(tableUri.TableName, rows));
             }
 
             throw new UriFormatException("The scheme for the GenericInsert SourceUri isn't supported.");

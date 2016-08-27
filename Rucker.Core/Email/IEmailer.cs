@@ -1,4 +1,4 @@
-﻿namespace Rucker.Email
+﻿namespace Rucker.Core
 {
     public interface IEmailer
     {

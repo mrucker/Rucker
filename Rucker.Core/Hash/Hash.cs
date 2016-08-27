@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Rucker.Core.Hash
+namespace Rucker.Core
 {
     public static class Hash
     {

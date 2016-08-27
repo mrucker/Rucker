@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
-using Rucker.Data;
 
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     [TestFixture]
     public class TableUriTests

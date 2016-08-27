@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 
-namespace Rucker.Extensions
+namespace Rucker.Core
 {
     public static class LinqExtensions
     {

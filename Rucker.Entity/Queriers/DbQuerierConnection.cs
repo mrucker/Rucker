@@ -3,10 +3,10 @@ using System.Linq;
 using System.Data.Entity;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
-using Rucker.Dispose;
-using Rucker.Extensions;
+using Rucker.Data;
+using Rucker.Core;
 
-namespace Rucker.Data
+namespace Rucker.Entities
 {
     public class DbQuerierConnection: Disposable,  IQuerierConnection
     {
@@ -45,9 +45,16 @@ namespace Rucker.Data
         #endregion
 
         #region Constructors
-        public DbQuerierConnection(string nameOrConnectionString)
+        public DbQuerierConnection(string nameOrConnectionString, bool persistentConnection = false)
         {
             _dbContext = new DbContext(nameOrConnectionString);
+
+            if (persistentConnection)
+            {
+                //EF always closes database connections between calls unless we manually open it.
+                //When we manually open the connection then it isn't until we dispose of the context.
+                _dbContext.Database.Connection.Open();
+            }
         }
         #endregion
 

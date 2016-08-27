@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Rucker.Data
+﻿namespace Rucker.Data
 {
     public class MapByCast<TSource, TDest>: IMap<TSource, TDest>
     {

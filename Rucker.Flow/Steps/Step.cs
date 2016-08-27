@@ -1,5 +1,5 @@
 using System;
-using Rucker.Dispose;
+using Rucker.Core;
 
 namespace Rucker.Flow
 {

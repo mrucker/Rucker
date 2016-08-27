@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Rucker.Convert;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

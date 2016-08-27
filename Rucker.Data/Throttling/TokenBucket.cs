@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using Rucker.Dispose;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

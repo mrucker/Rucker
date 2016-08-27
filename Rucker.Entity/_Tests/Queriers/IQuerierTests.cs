@@ -1,13 +1,13 @@
 ﻿using NUnit.Framework;
-using Rucker.Data;
-using Rucker.Testing;
+using Rucker.Core.Testing;
+using Rucker.Data.Tests;
 
-namespace Rucker.Entities.Tests.Data.Queriers
+namespace Rucker.Entities.Tests
 {
     [TestFixture]
-    public class IQuerierTests: Rucker.Tests.IQuerierTests
+    public class DbQuerierTests: IQuerierTests
     {
-        public IQuerierTests() : base(new DbQuerier(Test.ConnectionString))
+        public DbQuerierTests() : base(new DbQuerier(Test.ConnectionString) { Persistent = true })
         {
 
         }

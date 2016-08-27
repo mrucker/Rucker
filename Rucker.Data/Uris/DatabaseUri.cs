@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Configuration;
 using System.Data.EntityClient;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

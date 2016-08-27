@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Runtime.InteropServices;
-using Rucker.Testing;
-using Rucker.Convert;
+using Rucker.Core.Testing;
+using Rucker.Core;
 
 namespace Rucker.Flow
 {

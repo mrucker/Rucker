@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Rucker.Dispose;
+using Rucker.Core;
 
 namespace Rucker.Flow
 {

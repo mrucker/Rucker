@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using Rucker.Extensions;
+using Rucker.Core;
 
-namespace Rucker.Security
+namespace Rucker.Core
 {
     public class PasswordPolicy
     {

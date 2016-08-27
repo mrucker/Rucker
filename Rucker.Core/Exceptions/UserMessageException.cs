@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rucker.Exceptions
+namespace Rucker.Core
 {
     /// <summary>
     /// Messages from these exceptions will be shown directly to users

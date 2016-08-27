@@ -3,9 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
-using Rucker.Data;
 
-namespace Rucker.Testing
+namespace Rucker.Data.Testing
 {
     public class TestCsvFile : IDisposable
     {
@@ -37,7 +36,7 @@ namespace Rucker.Testing
 
         public IRows Read()
         {
-            using (var reader = new ReadCsvFile(Uri.FilePath))
+            using (var reader = new ReadCsv(Uri.FilePath))
             {
                 return reader.ReadAll();
             }

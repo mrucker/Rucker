@@ -1,9 +1,8 @@
 ﻿using System;
-using Rucker.Data;
-using Rucker.Testing;
+using Rucker.Core.Testing;
 using NUnit.Framework;
 
-namespace Rucker.Tests
+namespace Rucker.Data.Tests
 {
     [TestFixture, System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedVariable")]
     public class EqualColumnValuesTests
@@ -18,7 +17,7 @@ namespace Rucker.Tests
 
             var equalColumnValues = new EqualColumnValues(row1.Columns);
 
-            var executionTime = Testing.Test.ExecutionTime(() =>
+            var executionTime = Test.ExecutionTime(() =>
             {
                 for (var i = 0; i < tenThousand; i++)
                 {

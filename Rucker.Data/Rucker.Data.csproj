@@ -45,23 +45,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Mappers\IMap.cs" />
     <Compile Include="Mappers\MapByCast.cs" />
-    <Compile Include="Meta\DatabaseService.cs" />
-    <Compile Include="Meta\DotNetTypes.cs" />
-    <Compile Include="Meta\MetaColumn.cs" />
-    <Compile Include="Meta\TSqlTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queriers\IQuerier.cs" />
     <Compile Include="Queriers\IQuerierConnection.cs" />
-    <Compile Include="Queriers\SqlQuerier.cs" />
-    <Compile Include="Queriers\SqlQuerierConnection.cs" />
     <Compile Include="Readers\IRead.cs" />
-    <Compile Include="Readers\ReadConvert.cs" />
-    <Compile Include="Readers\ReadCsvFile.cs" />
+    <Compile Include="Readers\ReadMapped.cs" />
+    <Compile Include="Readers\ReadCsv.cs" />
     <Compile Include="Readers\ReadNotImplemented.cs" />
-    <Compile Include="Readers\ReadSqlServerPost2012.cs" />
-    <Compile Include="Readers\ReadSqlServerPre2012.cs" />
     <Compile Include="Readers\ReadUri.cs" />
     <Compile Include="Rows\BaseRow.cs" />
     <Compile Include="Rows\BaseRows.cs" />
@@ -77,36 +70,20 @@
     <Compile Include="Rows\UnionRow.cs" />
     <Compile Include="Rows\ValueRow.cs" />
     <Compile Include="Rows\WithoutColumnsRow.cs" />
+    <Compile Include="Testing\TestDbTable.cs" />
     <Compile Include="Throttling\TokenBucket.cs" />
     <Compile Include="Uris\BaseUri.cs" />
     <Compile Include="Uris\DatabaseUri.cs" />
     <Compile Include="Uris\DirectoryUri.cs" />
     <Compile Include="Uris\EmailUri.cs" />
     <Compile Include="Uris\FileUri.cs" />
-    <Compile Include="Uris\GridUri.cs" />
     <Compile Include="Uris\TableUri.cs" />
-    <Compile Include="Uris\UriExtensions.cs" />
-    <Compile Include="Uris\UsernameUri.cs" />
-    <Compile Include="Writers\Bulk\Bulk.cs" />
-    <Compile Include="Writers\Bulk\BulkAndMerge.cs" />
-    <Compile Include="Writers\Bulk\BulkExtensions.cs" />
-    <Compile Include="Writers\Bulk\ColumnMap.cs" />
-    <Compile Include="Writers\Bulk\DataReader.cs" />
-    <Compile Include="Writers\Bulk\IBulk.cs" />
-    <Compile Include="Writers\Bulk\IMerge.cs" />
-    <Compile Include="Writers\Bulk\MergeAction.cs" />
-    <Compile Include="Writers\Bulk\TableDataReader.cs" />
-    <Compile Include="Writers\Bulk\WriteBulk.cs" />
-    <Compile Include="Writers\Bulk\WriteBulkAndMerge.cs" />
     <Compile Include="Writers\IWrite.cs" />
     <Compile Include="Writers\UriWriter.cs" />
-    <Compile Include="Writers\WriteConvert.cs" />
+    <Compile Include="Writers\WriteMapped.cs" />
     <Compile Include="Writers\WriteCsv.cs" />
     <Compile Include="Testing\TestCsvFile.cs" />
-    <Compile Include="Testing\TestDbTable.cs" />
-    <Compile Include="_Tests\Meta\DatabaseServiceTests.cs" />
     <Compile Include="_Tests\Queriers\IQuerierTests.cs" />
-    <Compile Include="_Tests\Readers\ReadSqlQueryPre2012Tests.cs" />
     <Compile Include="_Tests\Rows\BaseRowsTests.cs" />
     <Compile Include="_Tests\Rows\DicionaryRowTests.cs" />
     <Compile Include="_Tests\Rows\EqualColumnValuesTests.cs" />
@@ -116,11 +93,8 @@
     <Compile Include="_Tests\Uris\FileUriTests.cs" />
     <Compile Include="_Tests\Uris\TableUriTests.cs" />
     <Compile Include="_Tests\Uris\UriTests.cs" />
-    <Compile Include="_Tests\Writers\WritBulkAndMergeTests.cs" />
-    <Compile Include="_Tests\Writers\WriteBulkTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -5,9 +5,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.ComponentModel.DataAnnotations;
 
-using Rucker.Convert;
-
-namespace Rucker.Reflection
+namespace Rucker.Core
 {
     public static class Reflect<T>
     {

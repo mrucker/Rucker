@@ -1,4 +1,6 @@
-﻿namespace Rucker.Data
+﻿using Rucker.Data;
+
+namespace Rucker.Entities
 {
     public static class UriExtensions
     {

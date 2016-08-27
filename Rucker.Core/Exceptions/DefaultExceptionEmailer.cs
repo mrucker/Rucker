@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Collections.Generic;
-using Rucker.Email;
 
-namespace Rucker.Exceptions
+namespace Rucker.Core
 {
     public class DefaultExceptionEmailer: IExceptionEmailer
     {

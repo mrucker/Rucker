@@ -2,7 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Rucker.Data;
-using Rucker.Testing;
+using Rucker.Core.Testing;
 
 
 namespace Rucker.Flow.Tests

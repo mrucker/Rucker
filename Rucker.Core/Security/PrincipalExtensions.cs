@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Collections.Generic;
 
-namespace Rucker.Security
+namespace Rucker.Core
 {
     public static class PrincipalExtensions
     {

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Rucker.Data;
-using Rucker.Testing;
-using Rucker.Extensions;
+using Rucker.Core.Testing;
+using Rucker.Core;
 
 
 namespace Rucker.Flow

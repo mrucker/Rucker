@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rucker.Dispose
+namespace Rucker.Core
 {
     /// <summary>
     /// This implements the Dispose pattern suggested by Microsoft at http://msdn.microsoft.com/en-us/library/fs2xkftw.aspx

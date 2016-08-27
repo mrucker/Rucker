@@ -1,8 +1,6 @@
 ﻿using System.Security;
-using Rucker.Email;
 
-
-namespace Rucker.Security
+namespace Rucker.Core
 {
     public static class Confirm
     {
