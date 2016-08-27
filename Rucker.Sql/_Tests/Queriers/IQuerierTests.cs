@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Rucker.Testing;
+using Rucker.Core.Testing;
 using Rucker.Data.Tests;
 
 namespace Rucker.Sql.Tests

@@ -1,8 +1,7 @@
 ﻿using System;
-using Rucker.Convert;
 using NUnit.Framework;
 
-namespace Rucker.Tests
+namespace Rucker.Core.Tests
 {
     [TestFixture]
     public class ConvertTests
@@ -79,7 +78,7 @@ namespace Rucker.Tests
         [Test]
         public void NullValueToNonNullableFails([Values(typeof(DateTime), typeof(DayOfWeek), typeof(int), typeof(float), typeof(double), typeof(decimal), typeof(long), typeof(bool))]Type type)
         {
-            Assert.Throws(Is.TypeOf<Exception>().And.Message.Contains("null is not a valid value for"), () => Convert.Convert.To(null, type));
+            Assert.Throws(Is.TypeOf<Exception>().And.Message.Contains("null is not a valid value for"), () => Core.Convert.To(null, type));
         }
 
         public void InvalidValueToNumericFails([Values(typeof(int), typeof(float), typeof(double), typeof(decimal))]Type type, [Values(true, false)] bool nullable)

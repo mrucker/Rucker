@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Rucker.Cache
+namespace Rucker.Core
 {
     public interface ICache
     {

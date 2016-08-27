@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace Rucker.Email
+namespace Rucker.Core
 {
     public class SmtpClientEmailer: IEmailer
     {

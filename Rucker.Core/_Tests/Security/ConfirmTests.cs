@@ -1,8 +1,7 @@
 ﻿using System.Security;
 using NUnit.Framework;
-using Rucker.Security;
 
-namespace Rucker.Tests
+namespace Rucker.Core.Tests
 {
     [TestFixture]
     public class ConfirmTests

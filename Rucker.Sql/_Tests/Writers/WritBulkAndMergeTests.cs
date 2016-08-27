@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using Rucker.Data;
-using Rucker.Testing;
-using Rucker.Convert;
+using Rucker.Core.Testing;
+using Rucker.Core;
 using NUnit.Framework;
 using Rucker.Data.Testing;
 
@@ -34,12 +34,12 @@ namespace Rucker.Sql.Tests
                 {
                     //2-23-2016 1.5681354
                     //2-24-2016 1.4953359
-                    var executionTime1 = Testing.Test.ExecutionTime(() => bulkAndMerge.WritePerformance(new BulkAndMerge(alphabets1)));                    
+                    var executionTime1 = Core.Testing.Test.ExecutionTime(() => bulkAndMerge.WritePerformance(new BulkAndMerge(alphabets1)));                    
                     Console.WriteLine("Millisecond/Alphabet: " + executionTime1.TotalMilliseconds / alphabets1.Rows.Count());
 
                     //2-23-2016 0.3666807
                     //2-24-2016 0.3213967
-                    var executionTime2 = Testing.Test.ExecutionTime(() => bulkAndMerge.WritePerformance(new BulkAndMerge(alphabets2)));
+                    var executionTime2 = Core.Testing.Test.ExecutionTime(() => bulkAndMerge.WritePerformance(new BulkAndMerge(alphabets2)));
                     Console.WriteLine("Millisecond/Alphabet: " + executionTime2.TotalMilliseconds / alphabets2.Rows.Count());
                 }
 
@@ -58,7 +58,7 @@ namespace Rucker.Sql.Tests
                 {
                     //2-23-2016 0.125447474
                     //2-24-2016 0.129404348
-                    var executionTime = Testing.Test.ExecutionTime(() => bulkAndMerge.WritePerformance(new BulkAndMerge(alphabets, new[] {"StageId"}, r => { })));
+                    var executionTime = Core.Testing.Test.ExecutionTime(() => bulkAndMerge.WritePerformance(new BulkAndMerge(alphabets, new[] {"StageId"}, r => { })));
                     Console.WriteLine("Millisecond/Alphabet: " + executionTime.TotalMilliseconds/alphabets.Rows.Count());
                 }
 

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Rucker.Testing;
+using Rucker.Core.Testing;
 using Rucker.Data.Testing;
 using NUnit.Framework;
 

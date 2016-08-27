@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Testing;
+using Rucker.Core.Testing;
 using NUnit.Framework;
 
 namespace Rucker.Data.Tests

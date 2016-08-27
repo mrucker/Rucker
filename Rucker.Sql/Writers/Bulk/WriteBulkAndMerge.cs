@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Rucker.Data;
-using Rucker.Dispose;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Sql
 {

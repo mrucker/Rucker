@@ -2,7 +2,7 @@
 using System.Data;
 using System.Linq;
 
-namespace Rucker.Testing
+namespace Rucker.Core.Testing
 {
     public class Alphabet
     {

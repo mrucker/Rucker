@@ -3,9 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Rucker.Data;
-using Rucker.Testing;
+using Rucker.Core.Testing;
 using Rucker.Data.Testing;
-
 
 namespace Rucker.Sql.Tests
 {
@@ -33,12 +32,12 @@ namespace Rucker.Sql.Tests
                 {
                     //2-23-2016 0.5135818
                     //2-24-2016 0.5299455
-                    var executionTime1 = Testing.Test.ExecutionTime(() => writeBulk.Write(new Bulk(alphabets1)));
+                    var executionTime1 = Core.Testing.Test.ExecutionTime(() => writeBulk.Write(new Bulk(alphabets1)));
                     Console.WriteLine("Millisecond/Alphabet: " + executionTime1.TotalMilliseconds / alphabets1.Rows.Count());
 
                     //2-23-2016 0.2129637
                     //2-24-2016 0.2112909
-                    var executionTime2 = Testing.Test.ExecutionTime(() => writeBulk.Write(new Bulk(alphabets2)));
+                    var executionTime2 = Core.Testing.Test.ExecutionTime(() => writeBulk.Write(new Bulk(alphabets2)));
                     Console.WriteLine("Millisecond/Alphabet: " + executionTime2.TotalMilliseconds / alphabets2.Rows.Count());
                 }
 
@@ -57,7 +56,7 @@ namespace Rucker.Sql.Tests
                 {
                     //2-23-2016 0.062496178
                     //2-24-2016 0.046557842
-                    var executionTime = Testing.Test.ExecutionTime(() => writeBulk.Write(new Bulk(alphabets)));
+                    var executionTime = Core.Testing.Test.ExecutionTime(() => writeBulk.Write(new Bulk(alphabets)));
                     Console.WriteLine("Millisecond/Alphabet: " + executionTime.TotalMilliseconds / alphabets.Rows.Count());
                 }
 

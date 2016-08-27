@@ -1,6 +1,5 @@
 ﻿using System.IO;
-using Rucker.Dispose;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

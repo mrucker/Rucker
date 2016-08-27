@@ -2,9 +2,7 @@ using System;
 using System.Linq;
 using System.Data.SqlClient;
 using Rucker.Data;
-using Rucker.Convert;
-using Rucker.Extensions;
-using Rucker.Exceptions;
+using Rucker.Core;
 
 namespace Rucker.Sql
 {

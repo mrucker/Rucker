@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Rucker.Exceptions;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

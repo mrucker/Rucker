@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Rucker.Dispose;
+using Rucker.Core;
 
 namespace Rucker.Flow
 {

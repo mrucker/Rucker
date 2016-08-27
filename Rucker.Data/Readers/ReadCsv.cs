@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualBasic.FileIO;
-using Rucker.Dispose;
-using Rucker.Exceptions;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

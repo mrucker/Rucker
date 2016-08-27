@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
-using Rucker.Security;
 
-namespace Rucker.Tests
+namespace Rucker.Core.Tests
 {
     [TestFixture]
     public class PasswordPolicyTets

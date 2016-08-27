@@ -3,7 +3,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Rucker.Testing
+namespace Rucker.Core.Testing
 {
     public static class Test
     {

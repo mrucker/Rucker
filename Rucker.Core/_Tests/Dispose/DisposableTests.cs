@@ -1,8 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
-using Rucker.Dispose;
 
-namespace Rucker.Tests
+namespace Rucker.Core.Tests
 {
     [TestFixture]
     public class DisposableTests

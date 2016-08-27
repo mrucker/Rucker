@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Rucker.Data;
-using Rucker.Dispose;
+using Rucker.Core;
 
 namespace Rucker.Sql
 {

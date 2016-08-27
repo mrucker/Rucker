@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using Rucker.Security;
 using NUnit.Framework;
 
-namespace Rucker.Tests
+namespace Rucker.Core.Tests
 {
     [TestFixture]
     public class PrincipalExtensionsTests

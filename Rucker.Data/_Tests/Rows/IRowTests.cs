@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Testing;
-using Rucker.Extensions;
+using Rucker.Core.Testing;
+using Rucker.Core;
 using NUnit.Framework;
 
 

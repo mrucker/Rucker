@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Extensions;
+using Rucker.Core;
 using NUnit.Framework;
 using Rucker.Flow._Tests.Classes.Mappers;
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ComponentModel;
-using Rucker.Extensions;
+using Rucker.Core;
 
-namespace Rucker.Convert
+namespace Rucker.Core
 {    
     public static class Convert
     {

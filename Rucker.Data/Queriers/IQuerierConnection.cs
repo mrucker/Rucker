@@ -3,7 +3,7 @@ using System.Linq;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Data
 {

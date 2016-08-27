@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Rucker.Cache
+namespace Rucker.Core
 {
     public class DictionaryCache: ICache
     {

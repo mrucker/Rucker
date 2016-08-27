@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
-using Rucker.Extensions;
+using Rucker.Core;
 using NUnit.Framework;
 
 namespace Rucker.Flow.Tests

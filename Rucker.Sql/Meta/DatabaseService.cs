@@ -2,8 +2,7 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using Rucker.Data;
-using Rucker.Dispose;
-using Rucker.Extensions;
+using Rucker.Core;
 
 namespace Rucker.Sql
 {

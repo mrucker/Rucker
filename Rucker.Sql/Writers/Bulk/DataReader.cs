@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using Rucker.Dispose;
+using Rucker.Core;
 
 namespace Rucker.Sql
 {

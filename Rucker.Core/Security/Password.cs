@@ -15,7 +15,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace Rucker.Security
+namespace Rucker.Core
 {
     /// <summary>
     /// This class can generate random passwords, which do not include ambiguous 

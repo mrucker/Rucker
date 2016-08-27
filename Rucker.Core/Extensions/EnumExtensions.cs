@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Rucker.Extensions
+namespace Rucker.Core
 {
     public static class EnumExtensions
     {

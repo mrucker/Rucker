@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Rucker.Extensions
+namespace Rucker.Core
 {
     public static class ListExtensions
     {
