@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Data.SqlClient;
 using System.ComponentModel;
 using System.Collections.Generic;
-using Rucker.Data;
 using Rucker.Core;
 
 namespace Rucker.Sql

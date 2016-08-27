@@ -124,7 +124,7 @@ namespace Rucker.Flow.Tests
         [Test]
         public void OnlyErrorTest()
         {
-            var pipe = null as IFirstPipe<string>;
+            IFirstPipe<string> pipe;
 
             try
             {
@@ -211,10 +211,8 @@ namespace Rucker.Flow.Tests
         {
             var pipe = _pipeFactory(SingleProduction());
 
-            foreach (var produce in pipe.Produces)
-            {
-                break;
-            }
+            //This is intentional. Should call dispose.
+            foreach (var produce in pipe.Produces) break;            
 
             Assert.AreEqual(PipeStatus.Finished, pipe.Status);
         }

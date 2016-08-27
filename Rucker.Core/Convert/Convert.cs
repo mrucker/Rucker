@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ComponentModel;
-using Rucker.Core;
 
 namespace Rucker.Core
 {    

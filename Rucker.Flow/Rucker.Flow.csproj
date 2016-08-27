@@ -104,10 +104,6 @@
       <Project>{c56449b9-a9b0-495f-8c7b-8ee6ad419fba}</Project>
       <Name>Rucker.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rucker.Data\Rucker.Data.csproj">
-      <Project>{d98306a1-773b-408f-981f-5ec2974e14e1}</Project>
-      <Name>Rucker.Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

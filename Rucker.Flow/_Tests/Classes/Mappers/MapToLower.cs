@@ -1,4 +1,4 @@
-﻿using Rucker.Data;
+﻿using Rucker.Core;
 
 namespace Rucker.Flow._Tests.Classes.Mappers
 {

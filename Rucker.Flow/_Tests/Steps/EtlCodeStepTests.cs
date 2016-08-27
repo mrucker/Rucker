@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
-using Rucker.Data;
+using Rucker.Core;
 using Rucker.Core.Testing;
 
 

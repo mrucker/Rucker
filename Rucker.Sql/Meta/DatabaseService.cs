@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Data.SqlClient;
 using System.Collections.Generic;
-using Rucker.Data;
 using Rucker.Core;
 
 namespace Rucker.Sql

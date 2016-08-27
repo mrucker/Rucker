@@ -3,7 +3,6 @@ using System.Linq;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Rucker.Data;
 using Rucker.Core;
 
 namespace Rucker.Sql

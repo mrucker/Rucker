@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rucker.Entity", "Rucker.Ent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rucker.Flow", "Rucker.Flow\Rucker.Flow.csproj", "{7FD3DFB5-23EB-40A5-B9C8-5EE58E4EF0A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rucker.Data", "Rucker.Data\Rucker.Data.csproj", "{D98306A1-773B-408F-981F-5EC2974E14E1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rucker.Sql", "Rucker.Sql\Rucker.Sql.csproj", "{AA4565CE-1BA2-44E3-811F-1D1857C1104D}"
 EndProject
 Global
@@ -31,10 +29,6 @@ Global
 		{7FD3DFB5-23EB-40A5-B9C8-5EE58E4EF0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FD3DFB5-23EB-40A5-B9C8-5EE58E4EF0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FD3DFB5-23EB-40A5-B9C8-5EE58E4EF0A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D98306A1-773B-408F-981F-5EC2974E14E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D98306A1-773B-408F-981F-5EC2974E14E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D98306A1-773B-408F-981F-5EC2974E14E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D98306A1-773B-408F-981F-5EC2974E14E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA4565CE-1BA2-44E3-811F-1D1857C1104D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA4565CE-1BA2-44E3-811F-1D1857C1104D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA4565CE-1BA2-44E3-811F-1D1857C1104D}.Release|Any CPU.ActiveCfg = Release|Any CPU

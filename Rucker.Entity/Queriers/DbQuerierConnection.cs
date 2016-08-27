@@ -3,7 +3,6 @@ using System.Linq;
 using System.Data.Entity;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
-using Rucker.Data;
 using Rucker.Core;
 
 namespace Rucker.Entities

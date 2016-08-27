@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using Rucker.Data;
+using Rucker.Core;
 
 namespace Rucker.Flow.Tests
 {

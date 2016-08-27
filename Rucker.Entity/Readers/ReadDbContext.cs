@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using Rucker.Data;
 using Rucker.Core;
 
 namespace Rucker.Entities

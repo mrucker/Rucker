@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Rucker.Data;
+using Rucker.Core;
 using Rucker.Core.Testing;
-using Rucker.Data.Testing;
 
 namespace Rucker.Sql.Tests
 {
