@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7FD3DFB5-23EB-40A5-B9C8-5EE58E4EF0A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Data.Flow</RootNamespace>
+    <AssemblyName>Data.Flow</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Pipes\Control\PollLimit.cs" />
+    <Compile Include="Pipes\EnumerablePipe.cs" />
+    <Compile Include="Pipes\MapPipe.cs" />
+    <Compile Include="Pipes\ReadPipe.cs" />
+    <Compile Include="Pipes\WritePipe.cs" />
+    <Compile Include="Steps\EtlPipeStep.cs" />
+    <Compile Include="Steps\Settings\ISetting.cs" />
+    <Compile Include="Steps\Settings\Setting.cs" />
+    <Compile Include="Steps\Settings\SettingSection.cs" />
+    <Compile Include="Pipes\Control\AsyncPipe.cs" />
+    <Compile Include="Pipes\Control\ThreadPipe.cs" />
+    <Compile Include="Pipes\Interfaces\IClosedPipe.cs" />
+    <Compile Include="Pipes\Interfaces\ILastPipe.cs" />
+    <Compile Include="Pipes\Interfaces\IMidPipe.cs" />
+    <Compile Include="Pipes\Interfaces\IPipe.cs" />
+    <Compile Include="Pipes\Interfaces\IFirstPipe.cs" />
+    <Compile Include="Pipes\Control\ConcatPipe.cs" />
+    <Compile Include="Pipes\Interfaces\PipeStatus.cs" />
+    <Compile Include="Steps\Step.cs" />
+    <Compile Include="Steps\MultiStep.cs" />
+    <Compile Include="Steps\ActionStep.cs" />
+    <Compile Include="Steps\EtlCodeStep.cs" />
+    <Compile Include="Steps\SqlStep.cs" />
+    <Compile Include="Pipes\LambdaPipe.cs" />
+    <Compile Include="Pipes\Control\PollPipe.cs" />
+    <Compile Include="_Tests\Classes\Mappers\MapToLower.cs" />
+    <Compile Include="_Tests\Classes\Readers\ReadFunc.cs" />
+    <Compile Include="_Tests\Classes\Steps\FailInitializingStep.cs" />
+    <Compile Include="_Tests\Classes\Steps\FailProcessingStep.cs" />
+    <Compile Include="_Tests\Classes\Writers\WriteFailed.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingProgressReport.cs" />
+    <Compile Include="_Tests\Steps\EtlPipeStepTests.cs" />
+    <Compile Include="_Tests\Steps\StepTests.cs" />
+    <Compile Include="_Tests\Steps\MultiStepTests.cs" />
+    <Compile Include="_Tests\Steps\ActionStepTests.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingStateReporter.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingErrorReporter.cs" />
+    <Compile Include="_Tests\Classes\Reporters\TestingProgressReporter.cs" />
+    <Compile Include="_Tests\Steps\EtlCodeStepTests.cs" />
+    <Compile Include="_Tests\Pipes\ILastPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\IMidPipeTests.cs" />
+    <Compile Include="_Tests\Pipes\IFirstPipeTests.cs" />
+    <Compile Include="_Tests\Trackers\ProgressTrackerTests.cs" />
+    <Compile Include="Track\IStateReporter.cs" />
+    <Compile Include="Track\IErrorReporter.cs" />
+    <Compile Include="Track\Tracker.cs" />
+    <Compile Include="_Tests\Classes\Readers\ReadDelay.cs" />
+    <Compile Include="_Tests\Classes\Readers\ReadMemory.cs" />
+    <Compile Include="_Tests\Classes\Writers\WriteDelay.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data.Core\Data.Core.csproj">
+      <Project>{c56449b9-a9b0-495f-8c7b-8ee6ad419fba}</Project>
+      <Name>Data.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

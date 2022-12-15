@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C56449B9-A9B0-495F-8C7B-8EE6AD419FBA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Data.Core</RootNamespace>
+    <AssemblyName>Data.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Dispose\Disposable.cs" />
+    <Compile Include="Cache\DictionaryCache.cs" />
+    <Compile Include="Cache\ICache.cs" />
+    <Compile Include="Email\SmtpClientEmailer.cs" />
+    <Compile Include="Email\IEmailer.cs" />
+    <Compile Include="Exceptions\DefaultExceptionEmailer.cs" />
+    <Compile Include="Exceptions\IExceptionEmailer.cs" />
+    <Compile Include="Exceptions\UserMessageException.cs" />
+    <Compile Include="Exceptions\UserMessageSqlTimeoutException.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Extensions\IntExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Hash\Hash.cs" />
+    <Compile Include="Mappers\IMap.cs" />
+    <Compile Include="Mappers\MapByCast.cs" />
+    <Compile Include="Queriers\IQuerier.cs" />
+    <Compile Include="Queriers\IQuerierConnection.cs" />
+    <Compile Include="Readers\IRead.cs" />
+    <Compile Include="Readers\ReadCsv.cs" />
+    <Compile Include="Readers\ReadMapped.cs" />
+    <Compile Include="Readers\ReadNotImplemented.cs" />
+    <Compile Include="Readers\ReadUri.cs" />
+    <Compile Include="Rows\BaseRow.cs" />
+    <Compile Include="Rows\BaseRows.cs" />
+    <Compile Include="Rows\ColumnNotFoundException.cs" />
+    <Compile Include="Rows\DictionaryRow.cs" />
+    <Compile Include="Rows\EqualColumnValues.cs" />
+    <Compile Include="Rows\Hasher.cs" />
+    <Compile Include="Rows\IRow.cs" />
+    <Compile Include="Rows\IRows.cs" />
+    <Compile Include="Rows\ITable.cs" />
+    <Compile Include="Rows\ObjectRow.cs" />
+    <Compile Include="Rows\Table.cs" />
+    <Compile Include="Rows\UnionRow.cs" />
+    <Compile Include="Rows\ValueRow.cs" />
+    <Compile Include="Rows\WithoutColumnsRow.cs" />
+    <Compile Include="Security\Confirm.cs" />
+    <Compile Include="Security\Password.cs" />
+    <Compile Include="Security\PasswordPolicy.cs" />
+    <Compile Include="Security\PrincipalExtensions.cs" />
+    <Compile Include="Testing\Alphabet.cs" />
+    <Compile Include="Testing\Test.cs" />
+    <Compile Include="Convert\Convert.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
+    <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Reflection\Reflect.cs" />
+    <Compile Include="Testing\TestCsvFile.cs" />
+    <Compile Include="Testing\TestDbTable.cs" />
+    <Compile Include="Throttling\TokenBucket.cs" />
+    <Compile Include="Uris\BaseUri.cs" />
+    <Compile Include="Uris\DatabaseUri.cs" />
+    <Compile Include="Uris\DirectoryUri.cs" />
+    <Compile Include="Uris\EmailUri.cs" />
+    <Compile Include="Uris\FileUri.cs" />
+    <Compile Include="Uris\TableUri.cs" />
+    <Compile Include="Writers\IWrite.cs" />
+    <Compile Include="Writers\UriWriter.cs" />
+    <Compile Include="Writers\WriteCsv.cs" />
+    <Compile Include="Writers\WriteMapped.cs" />
+    <Compile Include="_Tests\Convert\ConvertTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="_Tests\Dispose\DisposableTests.cs" />
+    <Compile Include="_Tests\Queriers\IQuerierTests.cs" />
+    <Compile Include="_Tests\Rows\BaseRowsTests.cs" />
+    <Compile Include="_Tests\Rows\DicionaryRowTests.cs" />
+    <Compile Include="_Tests\Rows\EqualColumnValuesTests.cs" />
+    <Compile Include="_Tests\Rows\IRowTests.cs" />
+    <Compile Include="_Tests\Rows\ObjectRowTests.cs" />
+    <Compile Include="_Tests\Security\ConfirmTests.cs" />
+    <Compile Include="_Tests\Security\PasswordPolicyTets.cs" />
+    <Compile Include="_Tests\Security\PrincipalExtensionsTests.cs" />
+    <Compile Include="_Tests\Throttling\TokenBucketTests.cs" />
+    <Compile Include="_Tests\Uris\FileUriTests.cs" />
+    <Compile Include="_Tests\Uris\TableUriTests.cs" />
+    <Compile Include="_Tests\Uris\UriTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
